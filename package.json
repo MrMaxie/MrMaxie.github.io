@@ -1,0 +1,12 @@
+{
+	"name": "maxie.github.io",
+	"dependencies": {
+		"gulp": "latest",
+		"gulp-less": "latest",
+		"gulp-util": "latest",
+		"gulp-autoprefixer": "latest",
+		"stream-combiner2": "latest",
+		"gulp-pug": "latest",
+		"gulp-clip-empty-files": "latest"
+	}
+}
