@@ -1,4 +1,6 @@
-{
+
+// Particles
+particlesJS('home', {
 	"particles": {
 		"number": {
 			"value": 80,
@@ -26,7 +28,7 @@
 			}
 		},
 		"opacity": {
-			"value": 0.5,
+			"value": .2,
 			"random": false,
 			"anim": {
 				"enable": false,
@@ -49,12 +51,12 @@
 			"enable": true,
 			"distance": 150,
 			"color": "#ffffff",
-			"opacity": 0.4,
+			"opacity": 0.1,
 			"width": 1
 		},
 		"move": {
 			"enable": true,
-			"speed": 2,
+			"speed": 1.8,
 			"direction": "none",
 			"random": false,
 			"straight": false,
@@ -107,4 +109,4 @@
 		}
 	},
 	"retina_detect": true
-}
+});

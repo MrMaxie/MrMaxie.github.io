@@ -1,3 +1,11 @@
+.custom-gradient (@from, @to, @startColor: #eee, @endColor: white) {
+	background-color: @startColor;
+	background: -webkit-gradient(linear, @from, @to, from(@startColor), to(@endColor));
+	background: -webkit-linear-gradient(@from, @startColor, @endColor);
+	background: -moz-linear-gradient(@from, @startColor, @endColor);
+	background: -ms-linear-gradient(@from, @startColor, @endColor);
+	background: -o-linear-gradient(@from, @startColor, @endColor);
+}
 .gradient (@startColor: #eee, @endColor: white) {
 	background-color: @startColor;
 	background: -webkit-gradient(linear, left top, left bottom, from(@startColor), to(@endColor));
