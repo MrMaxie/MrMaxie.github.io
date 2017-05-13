@@ -1,9 +1,26 @@
-
+doctype html
 html
 	head
-		title Maxie
-		script(src='/jquery.js')
+		title Maxie | Portfolio
+		|
+		meta(charset='utf-8')
+		meta(
+			name='viewport'
+			content='width=device-width, initial-scale=1'
+		)
+		|
+		link(
+			href='https://fonts.googleapis.com/css?family=Roboto:400'
+			rel='stylesheet'
+		)
+		link(href='css/main.css' rel='stylesheet')
+		|
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js')
+		script(src='js/main.js')
 	body
-		h1 nothing to see
-		#footer
-			p some footer content
+		#menu.transparent-bg
+			each name, index in ['Home', 'About me', 'Skills', 'Works', 'Contact']
+				.element(cc= !index ? 'active' : '' )= name
+			.indicatior
+		#home.section
+			.gradient

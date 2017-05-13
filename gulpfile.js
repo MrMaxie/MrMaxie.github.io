@@ -17,7 +17,10 @@ gulp.task('pug', function()
 	// Error handler for PUG
 	combined.on('error', function(e) {
 		gutil.log(
-			'['+gutil.colors.red('Error Pug')+']', e
+			'['+gutil.colors.red('Error Pug')+']',
+			e.filename, 
+			gutil.colors.magenta('->'),
+			e.line
 		);
 		combined.emit('end');
 	});
