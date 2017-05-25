@@ -1,4 +1,5 @@
 (function(){
+	return false;
 	var bgs = {
 		'#home .bg': 'http://drive.google.com/uc?export=view&id=0B5PQjHqiZbvibmo2YktUSm5xTlU'
 	};
