@@ -1,0 +1,28 @@
+#contact {
+	.text {
+		margin-top: 30px;
+		font-size: 30px;
+		color: black;
+		a {
+			color: black;
+			transition: padding-left .3s;
+			&:hover {
+				padding-left: 15px;
+			}
+		}
+	}
+	.desc {
+		font-size: 20px;
+		color: black;
+    opacity: .5;
+	}
+	.pure-u-1 {
+		margin-left: -60px;
+		opacity: 0;
+		transition: opacity .8s .2s, margin-left .8s .2s;
+		&.active {
+			margin-left: 0;
+			opacity: 1;
+		}
+	}
+}

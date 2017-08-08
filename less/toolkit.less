@@ -47,9 +47,9 @@
 	animation-timing-function:         @string;
 }
 
-.when-xs(@rules) { @media (max-width: 767px) { @rules(); } }
-.when-sm(@rules) { @media (min-width: 768px) { @rules(); } }
-.when-md(@rules) { @media (min-width: 970px) { @rules(); } }
+.when-xs(@rules) { @media (max-width: 767px)  { @rules(); } }
+.when-sm(@rules) { @media (min-width: 968px)  { @rules(); } }
+.when-md(@rules) { @media (min-width: 1070px) { @rules(); } }
 .when-lg(@rules) { @media (min-width: 1170px) { @rules(); } }
 
 .when-only-sm(@rules) { @media (min-width: 768px) and (max-width: 969px) { @rules(); } }

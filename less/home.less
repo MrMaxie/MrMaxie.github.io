@@ -1,60 +1,55 @@
 #home {
+	position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
 	height: 100vh;
+	.gradient(#1D85FE, #1149FE);
+	//.gradient(#00A0DC, #00729C);
+	z-index: 500;
+	overflow: hidden;
 	.container {
 		.center-it();
 		text-align: center;
+		color: white;
+	}
+	.menu {
+		background-color: transparent;
+		.logo {
+			color: transparent;
+		}
 	}
 	.text {
-		font-size: 55px;
+		font-size: 80px;
+		font-weight: 200;
+		cursor: default;
 	}
 	.desc {
-		font-size: 25px;
-		color: @c-3;
+		opacity: .6;
+		font-size: 22px;
+		cursor: default;
 	}
-	.code {
-		color: @c-2;
-		max-width: 100%;
-		white-space: pre;
-		font-family: 'Inconsolata', monospace;
-		padding: 30px;
-		overflow: hidden;
-		transition-duration: .2s;
-		&:after {
-			content: '|';
-			opacity: 1;
-			-webkit-animation: blink .7s infinite;
-			-moz-animation: blink .7s infinite;
-			animation: blink .7s infinite;
+	.info {
+		font-size: 16px;
+		opacity: .4;
+		transition: opacity .4s;
+		cursor: default;
+		&.inactive {
+			opacity: 0;
 		}
-		.when-xs({
-			font-size: 15px;
-		});
-		.when-sm({
-			font-size: 20px;
-		});
-		.when-md({
-			font-size: 25px;
-		});
-		.when-lg({
-			font-size: 30px;
-		});
 	}
-	@keyframes blink{
-		0% { opacity:1; }
-		50% { opacity:0; }
-		100% { opacity:1; }
-	}
-	@-webkit-keyframes blink{
-		0% { opacity:1; }
-		50% { opacity:0; }
-		100% { opacity:1; }
-	}
-	@-moz-keyframes blink{
-		0% { opacity:1; }
-		50% { opacity:0; }
-		100% { opacity:1; }
-	}
-	.typed-cursor {
-		display: none;
+	.bg {
+		cursor: default;
+		white-space: pre;
+		// .center-it();
+		position: absolute;
+		left: 10px;
+		bottom: 5px;
+		color: black;
+		font-size: 60px;
+    opacity: .2;
+    .when-lg({
+			font-size: 90px;
+    });
 	}
 }
