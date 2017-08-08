@@ -217,8 +217,13 @@ html {
   left: 10px;
   bottom: 5px;
   color: black;
-  font-size: 60px;
+  font-size: 30px;
   opacity: .2;
+}
+@media (min-width: 600px) {
+  #home .bg {
+    font-size: 60px;
+  }
 }
 @media (min-width: 1170px) {
   #home .bg {
@@ -350,7 +355,8 @@ html {
 }
 #skills .footer {
   margin-top: 20px;
-  font-size: 30px;
+  padding: 0 10px;
+  font-size: 25px;
   text-align: right;
 }
 #works {
@@ -452,8 +458,12 @@ html {
 }
 #works .footer {
   margin-top: 20px;
-  font-size: 20px;
+  font-size: 25px;
   text-align: right;
+  padding: 0 10px;
+}
+#works .footer span {
+  white-space: nowrap;
 }
 #contact .text {
   margin-top: 30px;
@@ -482,6 +492,7 @@ html {
   -o-transition: opacity 0.8s 0.2s, margin-left 0.8s 0.2s;
   -moz-transition: opacity 0.8s 0.2s, margin-left 0.8s 0.2s;
   transition: opacity 0.8s 0.2s, margin-left 0.8s 0.2s;
+  padding: 0 10px;
 }
 #contact .pure-u-1.active {
   margin-left: 0;
@@ -489,11 +500,17 @@ html {
 }
 #footer {
   background-color: #111;
-  height: 60px;
+  min-height: 60px;
   color: white;
   line-height: 60px;
   font-size: 18px;
+  padding: 0 10px;
 }
 #footer .right {
   float: right;
+}
+#footer:after {
+  content: '';
+  display: block;
+  clear: both;
 }

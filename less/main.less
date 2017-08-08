@@ -144,11 +144,17 @@ body, html {
 
 #footer {
 	background-color: #111;
-	height: 60px;
+	min-height: 60px;
 	color: white;
 	line-height: 60px;
 	font-size: 18px;
+	padding: 0 10px;
 	.right {
 		float: right;
+	}
+	&:after {
+		content: '';
+		display: block;
+		clear: both;
 	}
 }
