@@ -43,6 +43,7 @@ html {
   }
 }
 .menu .logo {
+  padding-left: 10px;
   float: left;
   display: none;
   color: white;
@@ -469,6 +470,7 @@ html {
   margin-top: 30px;
   font-size: 30px;
   color: black;
+  font-family: 'Quicksand', sans-serif;
 }
 #contact .text a {
   color: black;
@@ -484,6 +486,7 @@ html {
   font-size: 20px;
   color: black;
   opacity: .5;
+  font-family: 'Quicksand', sans-serif;
 }
 #contact .pure-u-1 {
   margin-left: -60px;
