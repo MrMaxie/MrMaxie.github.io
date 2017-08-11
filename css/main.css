@@ -185,6 +185,7 @@ html {
 }
 #home .menu {
   background-color: transparent;
+  z-index: 200;
 }
 #home .menu .logo {
   color: transparent;
@@ -251,10 +252,10 @@ html {
   -moz-box-shadow: 0px 5px 20px -5px rgba(0, 0, 0, 0.25);
   box-shadow: 0px 5px 20px -5px rgba(0, 0, 0, 0.25);
   opacity: 0;
-  -webkit-transition: opacity 0.8s 0.2s, margin-left 0.8s 0.2s;
-  -o-transition: opacity 0.8s 0.2s, margin-left 0.8s 0.2s;
-  -moz-transition: opacity 0.8s 0.2s, margin-left 0.8s 0.2s;
-  transition: opacity 0.8s 0.2s, margin-left 0.8s 0.2s;
+  -webkit-transition: opacity 0.8s 0.1s, margin-left 0.8s 0.1s;
+  -o-transition: opacity 0.8s 0.1s, margin-left 0.8s 0.1s;
+  -moz-transition: opacity 0.8s 0.1s, margin-left 0.8s 0.1s;
+  transition: opacity 0.8s 0.1s, margin-left 0.8s 0.1s;
 }
 #skills .lang .card.js {
   border-color: #F7DF1E;
@@ -366,8 +367,11 @@ html {
 #works .pure-u-1 {
   padding: 10px;
 }
+#works a {
+  text-decoration: none;
+}
 #works .block {
-  height: 250px;
+  min-height: 150px;
   position: relative;
   width: 100%;
   background-repeat: no-repeat;
@@ -378,55 +382,32 @@ html {
   background-position: center center;
   color: white;
   -webkit-box-shadow: 0px 5px 20px -5px rgba(0, 0, 0, 0.25);
-  -moz-box-shadow: 0px 5px 20px -5px rgba(0, 0, 0, 0.25);
-  box-shadow: 0px 5px 20px -5px rgba(0, 0, 0, 0.25);
+     -moz-box-shadow: 0px 5px 20px -5px rgba(0, 0, 0, 0.25);
+          box-shadow: 0px 5px 20px -5px rgba(0, 0, 0, 0.25);
   margin-left: -60px;
   opacity: 0;
-  -webkit-transition: opacity 0.8s 0.2s, margin-left 0.8s 0.2s, -webkit-transform 0.3s;
-  transition: opacity 0.8s 0.2s, margin-left 0.8s 0.2s, -webkit-transform 0.3s;
-  -o-transition: opacity 0.8s 0.2s, margin-left 0.8s 0.2s, -o-transform 0.3s;
-  -moz-transition: opacity 0.8s 0.2s, margin-left 0.8s 0.2s, transform 0.3s, -moz-transform 0.3s;
-  transition: opacity 0.8s 0.2s, margin-left 0.8s 0.2s, transform 0.3s;
-  transition: opacity 0.8s 0.2s, margin-left 0.8s 0.2s, transform 0.3s, -webkit-transform 0.3s, -moz-transform 0.3s, -o-transform 0.3s;
-}
-#works .block:hover {
-  -webkit-transform: scale(1.1);
-     -moz-transform: scale(1.1);
-      -ms-transform: scale(1.1);
-       -o-transform: scale(1.1);
-          transform: scale(1.1);
+  border: 0 solid transparent;
+  border-right-width: 5px;
+  -webkit-transition: opacity 0.8s 0.1s, margin-left 0.8s 0.1s, -webkit-transform 0.3s, -webkit-box-shadow 0.3s;
+  transition: opacity 0.8s 0.1s, margin-left 0.8s 0.1s, -webkit-transform 0.3s, -webkit-box-shadow 0.3s;
+  -o-transition: opacity 0.8s 0.1s, margin-left 0.8s 0.1s, box-shadow 0.3s, -o-transform 0.3s;
+  -moz-transition: opacity 0.8s 0.1s, margin-left 0.8s 0.1s, transform 0.3s, box-shadow 0.3s, -moz-transform 0.3s, -moz-box-shadow 0.3s;
+  transition: opacity 0.8s 0.1s, margin-left 0.8s 0.1s, transform 0.3s, box-shadow 0.3s;
+  transition: opacity 0.8s 0.1s, margin-left 0.8s 0.1s, transform 0.3s, box-shadow 0.3s, -webkit-transform 0.3s, -moz-transform 0.3s, -o-transform 0.3s, -webkit-box-shadow 0.3s, -moz-box-shadow 0.3s;
+  font-family: 'Quicksand', sans-serif;
 }
 #works .block.active {
   margin-left: 0;
   opacity: 1;
 }
-#works .block .color {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: transparent;
-  z-index: 100;
-}
-#works .block .text {
-  color: white;
-  z-index: 110;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  font-family: 'Quicksand', sans-serif;
-}
-#works .block .text .name {
+#works .block .name {
   position: absolute;
   top: 10px;
   left: 10px;
   right: 10px;
-  font-size: 18px;
+  font-size: 20px;
 }
-#works .block .text .url {
+#works .block .url {
   opacity: .6;
   position: absolute;
   bottom: 10px;
@@ -434,13 +415,13 @@ html {
   right: 10px;
   font-size: 12px;
 }
-#works .block .text .tags {
+#works .block .tags {
   position: absolute;
-  top: 35px;
+  top: 37px;
   left: 10px;
   right: 10px;
 }
-#works .block .text .tags span {
+#works .block .tags span {
   -webkit-border-radius: 10px;
      -moz-border-radius: 10px;
           border-radius: 10px;
@@ -449,13 +430,33 @@ html {
   margin-right: 5px;
   font-size: 12px;
 }
-#works .block.html .color {
-  background-color: rgba(229, 79, 39, 0.9);
-  border-right: 5px #ffa58d solid;
+#works .block .desc {
+  text-decoration: none;
+  padding: 62px 10px 30px 10px;
+  text-align: justify;
+  font-size: 14px;
 }
-#works .block.python .color {
-  background-color: rgba(59, 119, 170, 0.9);
-  border-right: 5px #67b8fe solid;
+#works .block.html {
+  background-color: #E54F27;
+  border-right-color: #ffa58d;
+}
+#works .block.python {
+  background-color: #3B77AA;
+  border-right-color: #67b8fe;
+}
+#works .block.php {
+  background-color: #777BB3;
+  border-right-color: #b4b8f6;
+}
+#works .block:hover {
+  -webkit-transform: scale(1.1);
+     -moz-transform: scale(1.1);
+      -ms-transform: scale(1.1);
+       -o-transform: scale(1.1);
+          transform: scale(1.1);
+  -webkit-box-shadow: 0px 5px 20px -3px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow: 0px 5px 20px -3px rgba(0, 0, 0, 0.5);
+          box-shadow: 0px 5px 20px -3px rgba(0, 0, 0, 0.5);
 }
 #works .footer {
   margin-top: 20px;

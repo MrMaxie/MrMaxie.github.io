@@ -3,85 +3,77 @@
 	.pure-u-1 {
 		padding: 10px;
 	}
+	a {
+		text-decoration: none;
+	}
 	.block {
-		height: 250px;
+		min-height: 150px;
 		position: relative;
 		width: 100%;
 		background-repeat: no-repeat;
 		background-size: 1;
 		background-position: center center;
 		color: white;
-		-webkit-box-shadow: 0px 5px 20px -5px rgba(0,0,0,0.25);
-		-moz-box-shadow: 0px 5px 20px -5px rgba(0,0,0,0.25);
 		box-shadow: 0px 5px 20px -5px rgba(0,0,0,0.25);
 		margin-left: -60px;
 		opacity: 0;
-		transition: opacity .8s .2s, margin-left .8s .2s, transform .3s;
-		&:hover {
-			transform: scale(1.1);
-		}
+		border: 0 solid transparent;
+		border-right-width: 5px;
+		transition: opacity .8s .1s, margin-left .8s .1s, transform .3s, box-shadow .3s;
 		&.active {
 			margin-left: 0;
 			opacity: 1;
 		}
-		.color {
+		.setFont();
+		.name {
 			position: absolute;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			background-color: transparent;
-			z-index: 100;
+			top: 10px;
+			left: 10px;
+			right: 10px;
+			font-size: 20px;
 		}
-		.text {
-			color: white;
-			z-index: 110;
+		.url {
+			opacity: .6;
 			position: absolute;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			.setFont();
-			.name {
-				position: absolute;
-				top: 10px;
-				left: 10px;
-				right: 10px;
-				font-size: 18px;
-			}
-			.url {
-				opacity: .6;
-				position: absolute;
-				bottom: 10px;
-				left: 10px;
-				right: 10px;
+			bottom: 10px;
+			left: 10px;
+			right: 10px;
+			font-size: 12px;
+		}
+		.tags {
+			position: absolute;
+			top: 37px;
+			left: 10px;
+			right: 10px;
+			span {
+				border-radius: 10px;
+				background-color: rgba(0,0,0,.5);
+				padding: 3px 8px;
+				margin-right: 5px;
 				font-size: 12px;
 			}
-			.tags {
-				position: absolute;
-				top: 35px;
-				left: 10px;
-				right: 10px;
-				span {
-					border-radius: 10px;
-					background-color: rgba(0,0,0,.5);
-					padding: 3px 8px;
-					margin-right: 5px;
-					font-size: 12px;
-				}
-			}
+		}
+		.desc {
+			text-decoration: none;
+			padding: 62px 10px 30px 10px;
+			text-align: justify;
+			font-size: 14px;
 		}
 		&.html {
-			.color {
-				background-color: fade(#E54F27, 90%);
-				border-right: 5px lighten(saturate(#E54F27, 50%), 25%) solid;
-			}
+			background-color: #E54F27;
+			border-right-color: lighten(saturate(#E54F27, 50%), 25%);
 		}
 		&.python {
-			.color {
-				background-color: fade(#3B77AA, 90%);
-				border-right: 5px lighten(saturate(#3B77AA, 50%), 25%) solid;
-			}
+			background-color: #3B77AA;
+			border-right-color: lighten(saturate(#3B77AA, 50%), 25%);
+		}
+		&.php {
+			background-color: #777BB3;
+			border-right-color: lighten(saturate(#777BB3, 50%), 25%);
+		}
+		&:hover {
+			transform: scale(1.1);
+			box-shadow: 0px 5px 20px -3px rgba(0,0,0,0.5);
 		}
 	}
 	.footer {
