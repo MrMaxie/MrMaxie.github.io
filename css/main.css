@@ -157,6 +157,7 @@ html {
   opacity: .5;
 }
 #home {
+  max-height: 100%;
   position: absolute;
   top: 0;
   right: 0;
