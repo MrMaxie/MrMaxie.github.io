@@ -7,4 +7,7 @@ export default defineConfig({
   integrations: [mdx()],
   output: "static",
   outDir: "docs",
+  build: {
+    assets: "static",
+  },
 });
