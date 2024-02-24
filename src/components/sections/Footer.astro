@@ -1,0 +1,35 @@
+<footer>
+    <div class="left">
+        <a href="mailto:mienkomaciej@gmail.com">Get in touch</a>
+    </div>
+    <div class="right">
+        <p>© <span data-cp-year>2024</span> Maciej (Maxie) Mieńko</p>
+    </div>
+</footer>
+
+<script>
+    const $cpYear = document.querySelector<HTMLSpanElement>('[data-cp-year]');
+    const startYear = 2024;
+    const currentYear = new Date().getFullYear();
+
+    if ($cpYear) {
+        if (currentYear > startYear) {
+            $cpYear.textContent = `${startYear} - ${currentYear}`;
+        } else {
+            $cpYear.textContent = startYear.toString();
+        }
+    }
+</script>
+
+<style lang="scss" is:global>
+    footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+
+        .left a {
+            font-size: 1.1rem;
+        }
+    }
+</style>

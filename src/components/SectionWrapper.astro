@@ -1,0 +1,36 @@
+---
+import TablerIcon from './TablerIcon.astro';
+
+interface Props {
+    icon?: string;
+    title: string;
+}
+
+const { title, icon } = Astro.props;
+---
+
+<section class="section-wrapper">
+    <h1>
+        {icon && <TablerIcon name={icon} />}
+        {title}
+    </h1>
+    <div class="content">
+        <slot />
+    </div>
+</section>
+
+<style lang="scss" is:global>
+    .section-wrapper {
+        h1 {
+            margin: 0;
+            padding: 1rem;
+            border-bottom: 2px solid var(--bg2);
+            align-items: center;
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+

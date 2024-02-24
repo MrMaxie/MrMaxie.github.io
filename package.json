@@ -1,12 +1,29 @@
 {
-	"name": "MrMaxie.github.io",
-	"dependencies": {
-		"gulp": "latest",
-		"gulp-less": "latest",
-		"gulp-util": "latest",
-		"gulp-autoprefixer": "latest",
-		"stream-combiner2": "latest",
-		"gulp-pug": "latest",
-		"gulp-clip-empty-files": "latest"
-	}
+  "name": "docs",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "aos": "2.3.4"
+  },
+  "devDependencies": {
+    "@astrojs/mdx": "^2.1.1",
+    "@fontsource-variable/karla": "5.0.19",
+    "@fontsource/fira-mono": "^5.0.8",
+    "@tabler/icons": "2.47.0",
+    "@tabler/icons-vue": "2.47.0",
+    "@tabler/icons-webfont": "2.47.0",
+    "@types/aos": "^3.0.7",
+    "@types/node": "20.11.19",
+    "astro": "^4.4.0",
+    "cheerio": "1.0.0-rc.12",
+    "sass": "1.71.0",
+    "typescript": "^5.3.3"
+  }
 }

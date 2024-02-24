@@ -1,0 +1,26 @@
+---
+import * as cheerio from 'cheerio';
+import { createRequire } from 'node:module';
+import { readFile } from 'node:fs/promises';
+
+const theRequire = createRequire(import.meta.url);
+
+interface Props {
+    name: string;
+}
+
+const { name } = Astro.props;
+
+const svgPath = `@tabler/icons/${name}.svg`;
+const svgRealPath = theRequire.resolve(svgPath);
+
+const loadedSvg = await readFile(svgRealPath, 'utf-8');
+
+const $ = cheerio.load(loadedSvg);
+
+$('svg').attr('stroke-width', '1.5');
+
+const svg = $.html();
+---
+
+<Fragment set:html={svg} />

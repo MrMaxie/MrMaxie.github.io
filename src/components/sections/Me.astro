@@ -1,0 +1,50 @@
+<section class="me">
+    <div class="description">
+        <div class="name">Maciej Mieńko</div>
+        <div class="sub">
+            Passionate <strong>Programmer</strong>,<br>
+            Boundless <strong>Dreamer</strong>
+        </div>
+    </div>
+    <div class="picture"></div>
+</section>
+
+<style scoped lang="scss">
+    section.me {
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+        align-items: flex-start;
+
+        .picture {
+            aspect-ratio: 1 / 1;
+            max-width: 150px;
+            width: 150px;
+            position: relative;
+
+            border-radius: 100%;
+            background: url('/avatar.webp') center no-repeat;
+            background-image: image-set(
+                url('/avatar.webp') type('image/webp'),
+                url('/avatar.jpg') type('image/jpeg'),
+            );
+            background-size: cover;
+        }
+
+        .description {
+            flex: 1;
+            text-align: justify;
+            display: flex;
+            flex-direction: column;
+
+            .name {
+                font-size: 3rem;
+                font-weight: bold;
+            }
+
+            .sub {
+                color: var(--text-dim);
+            }
+        }
+    }
+</style>

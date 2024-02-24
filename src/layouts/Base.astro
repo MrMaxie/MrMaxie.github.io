@@ -1,0 +1,103 @@
+---
+import 'aos/dist/aos.css';
+
+import '@fontsource/fira-mono/400.css';
+import '@fontsource/fira-mono/500.css';
+import '@fontsource/fira-mono/700.css';
+import '@fontsource-variable/karla';
+import '@tabler/icons-webfont/tabler-icons.css';
+
+interface Props {
+    title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="description" content="Astro description" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <title>{title}</title>
+    </head>
+    <body>
+        <main>
+            <slot />
+        </main>
+    </body>
+</html>
+
+<script src="~/scripts/initAos.ts"></script>
+
+<style is:global lang="scss">
+    :root {
+        --background: #14171a; // or #151515
+        --background-variant: #282d30; // #202022
+        --text: #f0f0f0;
+        --text-dim: #afafbf;
+        --text-accent: #66ccff;
+
+        --old-bg2: #2d2a2e;
+        --old-bg: #423f42;
+        --old-text: #fcfcfa;
+        --old-text-dim: #939293;
+        --old-column-width: 800px;
+        --old-bg-border: #565256;
+    }
+
+    body {
+        font-family: 'Karla Variable', sans-serif;
+        color: var(--text);
+
+        padding: 0;
+        margin: 0;
+        background-color: var(--background);
+        font-weight: normal;
+        font-size: 16px;
+    }
+
+    a {
+        color: var(--text-accent);
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    *::-webkit-scrollbar-track {
+        background-color: var(--background);
+    }
+
+    *::-webkit-scrollbar {
+        width: 12px;
+        background-color: var(--background);
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background-color: var(--text-dim);
+    }
+
+    main {
+		margin: auto;
+		padding: 1rem;
+		width: 800px;
+		max-width: 100%;
+		color: var(--text);
+		font-size: 16px;
+		line-height: 1.6;
+	}
+
+    h1, h2, h3 {
+        margin: 0;
+        padding: 0;
+        margin-bottom: 1rem;
+    }
+</style>

@@ -1,0 +1,45 @@
+<article class="article-content">
+    <slot />
+</article>
+
+<style lang="scss" is:global>
+    article.article-content {
+        p {
+            padding: 0 2rem;
+            margin: 0;
+            margin-bottom: 1rem;
+            text-align: justify;
+            font-size: 1.1rem;
+            color: #ddd;
+            font-weight: 300;
+
+            strong {
+                font-weight: 600;
+            }
+        }
+
+        ul {
+            padding: 0 2rem;
+            margin: 0;
+            margin-bottom: 1rem;
+            list-style: none;
+            font-weight: 300;
+            font-size: 1rem;
+            font-weight: 300;
+
+            li {
+                margin-bottom: 0.5rem;
+                padding-left: 1rem;
+                position: relative;
+                text-align: justify;
+
+                &::before {
+                    content: '•';
+                    position: absolute;
+                    left: 0;
+                    color: #ddd;
+                }
+            }
+        }
+    }
+</style>

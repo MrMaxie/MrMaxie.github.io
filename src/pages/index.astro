@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+
+import MeSection from '../components/sections/Me.astro';
+import ProjectsSection from '../components/sections/Projects.astro';
+import FooterSection from '../components/sections/Footer.astro';
+---
+
+<BaseLayout title="Maciej Mieńko">
+    <Header isTitleHidden={true} />
+    <MeSection />
+    <ProjectsSection />
+    <FooterSection />
+</BaseLayout>

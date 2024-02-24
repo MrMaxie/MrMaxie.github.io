@@ -1,0 +1,24 @@
+---
+import BaseLayout from '~/layouts/Base.astro';
+
+import Breadcrumbs from '~/components/Breadcrumbs.astro';
+import Header from '~/components/Header.astro';
+
+import FooterSection from '~/components/sections/Footer.astro';
+import ProjectsSection from '~/components/sections/Projects.astro';
+---
+
+<BaseLayout title="Projects | Maciej Mieńko">
+    <Header />
+
+    <Breadcrumbs
+        crumbs={[
+            ['Home', '/'],
+            ['Projects'],
+        ]}
+    />
+
+    <ProjectsSection />
+
+    <FooterSection />
+</ArticleLayout>

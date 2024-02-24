@@ -1,0 +1,90 @@
+---
+interface Props {
+    isTitleHidden?: boolean;
+}
+
+import TablerIcon from './TablerIcon.astro';
+
+const { isTitleHidden } = Astro.props;
+---
+
+<nav>
+    {isTitleHidden === true ? null : (
+        <div class="name">
+            Maciej Mieńko<span>aka Maxie</span>
+        </div>
+    )}
+
+    <div class="spacer"></div>
+
+    <a href="/">About</a>
+    <a href="/projects">Projects</a>
+    <a href="mailto:mienkomaciej@gmail.com" aria-label="Email Link" class="icon-link">
+        <TablerIcon name="at" />
+    </a>
+    <a href="https://github.com/MrMaxie" aria-label="Github Link" class="icon-link">
+        <TablerIcon name="brand-github" />
+    </a>
+    <a href="https://www.linkedin.com/in/maciej-mie%C5%84ko-b0200b190/" aria-label="LinkedIn Link" class="icon-link">
+        <TablerIcon name="brand-linkedin" />
+    </a>
+</nav>
+
+<style lang="scss" is:global>
+    nav {
+        margin-bottom: 1rem;
+        padding: 1rem;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .spacer {
+            flex: 1;
+        }
+
+        .name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            // opacity: 0;
+            transition: opacity 0.3s;
+
+            &[data-is-hidden="false"] {
+                opacity: 1;
+            }
+
+            span {
+                font-size: 1rem;
+                font-weight: 400;
+                color: var(--text-dim);
+                margin-left: 5px;
+            }
+        }
+
+        a {
+            color: var(--text-dim);
+            text-decoration: none;
+            padding: .5rem;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s;
+            border-radius: 5px;
+
+            &.icon-link, &[data-active="true"] {
+                color: var(--text);
+            }
+
+            &:hover {
+                color: var(--text-accent);
+            }
+        }
+
+    }
+</style>

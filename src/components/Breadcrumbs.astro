@@ -1,0 +1,46 @@
+---
+interface Props {
+    crumbs: Array<[name: string, url?: string]>;
+}
+
+const { crumbs } = Astro.props;
+---
+
+<div class="breadcrumbs">
+    {crumbs.map(crumb => {
+        const [name, url] = crumb;
+
+        return url ? (
+            <a class="crumb" href={url}>{name}</a>
+        ) : (
+            <span class="crumb">{name}</span>
+        );
+    })}
+</div>
+
+<style lang="scss">
+    .breadcrumbs {
+        margin-bottom: 1rem;
+
+        .crumb {
+            &:last-child:after {
+                content: none;
+            }
+
+            &:after {
+                content: '›';
+                margin: 0 0.5rem;
+            }
+        }
+
+        a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.2s;
+
+            &:hover {
+                color: var(--text-accent);
+            }
+        }
+    }
+</style>

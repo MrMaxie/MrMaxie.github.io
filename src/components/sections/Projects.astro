@@ -1,0 +1,81 @@
+---
+interface Props {
+    exceptSlugs?: string[];
+    max?: number;
+}
+
+import Section from '../SectionWrapper.astro';
+import { getProjects } from '~/utils/projects.astro';
+
+const { exceptSlugs, max } = Astro.props;
+
+const projects = await getProjects({
+    exceptSlugs,
+    max: max ?? 3,
+    sortMethod: 'date',
+});
+---
+{projects.length === 0 ? null : (
+    <Section title="Projects" icon="box-seam">
+        <div class="list">
+            {projects.map(x => ({ ...x.frontmatter, path: x.path })).map((project) => (
+                <div class="item">
+                    <a class="title" href={project.path}>
+                        {project.title}
+                    </a>
+                    <div class="date">
+                        {project.date}
+                    </div>
+                    <div class="description">
+                        {project.description}
+                    </div>
+                </div>
+            ))}
+        </div>
+    </Section>
+)}
+
+<style lang="scss" scoped>
+    .list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .item {
+            display: grid;
+            gap: 0.5rem;
+
+            grid-template-areas: "title date" "description description";
+            grid-template-columns: 1fr auto;
+
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--background-variant);
+
+            &:last-child {
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+
+            .title {
+                font-size: 1rem;
+                font-weight: 600;
+                grid-area: title;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+
+            .date {
+                font-size: 1rem;
+                grid-area: date;
+            }
+
+            .description {
+                font-size: 0.9rem;
+                text-align: justify;
+                grid-area: description;
+            }
+        }
+    }
+</style>

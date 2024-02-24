@@ -1,0 +1,12 @@
+{
+  "extends": "astro/tsconfigs/base",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "verbatimModuleSyntax": true,
+    "paths": {
+      "~/*": ["src/*"],
+      "~content/*": ["content/*"],
+    }
+  }
+}

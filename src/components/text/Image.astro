@@ -1,0 +1,47 @@
+---
+import { Image as AstroImage } from 'astro:assets';
+
+interface Props {
+    alt: string;
+    src: ImageMetadata;
+    type: 'icon';
+    aos?: string;
+}
+
+const { alt, src, type, aos } = Astro.props;
+---
+
+<div class="image-wrapper" data-type={type}>
+    <div class="image" data-aos={aos ?? 'zoom-in-up'}>
+        <AstroImage
+            src={src}
+            alt={alt}
+            loading="eager"
+        />
+    </div>
+</div>
+
+<style lang="scss" scoped>
+    .image-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        &[data-type="icon"] {
+            .image {
+                width: 10rem;
+                height: 10rem;
+            }
+        }
+
+        .image {
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+        }
+    }
+</style>
