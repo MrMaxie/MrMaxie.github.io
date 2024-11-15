@@ -13,11 +13,7 @@ const { alt, src, type, aos } = Astro.props;
 
 <div class="image-wrapper" data-type={type}>
     <div class="image" data-aos={aos ?? 'zoom-in-up'}>
-        <AstroImage
-            src={src}
-            alt={alt}
-            loading="eager"
-        />
+        <AstroImage src={src} alt={alt} loading="eager" />
     </div>
 </div>
 
@@ -28,7 +24,7 @@ const { alt, src, type, aos } = Astro.props;
         align-items: center;
         margin-bottom: 1rem;
 
-        &[data-type="icon"] {
+        &[data-type='icon'] {
             .image {
                 width: 10rem;
                 height: 10rem;

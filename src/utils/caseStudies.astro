@@ -27,7 +27,9 @@ export const getCaseStudies = async (args?: Args) => {
     }>('~content/case-studies/*/index.astro');
 
     if (exceptSlugs) {
-        posts = posts.filter(post => !exceptSlugs.includes(post.frontmatter.slug));
+        posts = posts.filter(
+            post => !exceptSlugs.includes(post.frontmatter.slug),
+        );
     }
 
     if (max) {
@@ -36,7 +38,10 @@ export const getCaseStudies = async (args?: Args) => {
 
     if (sortMethod === 'date') {
         posts = posts.sort((a, b) => {
-            return new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime();
+            return (
+                new Date(b.frontmatter.date).getTime() -
+                new Date(a.frontmatter.date).getTime()
+            );
         });
     } else {
         posts = posts.sort(() => Math.random() - 0.5);

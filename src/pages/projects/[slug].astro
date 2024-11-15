@@ -1,8 +1,5 @@
 ---
-import type {
-    GetStaticPaths,
-    InferGetStaticPropsType,
-} from 'astro';
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import BaseLayout from '~/layouts/Base.astro';
 
@@ -11,8 +8,8 @@ import Tags from '~/components/Tags.astro';
 import Header from '~/components/Header.astro';
 import ArticleContent from '~/components/ArticleContent.astro';
 
-import FooterSection from '~/components/sections/Footer.astro'
-import ProjectsSection from '~/components/sections/Projects.astro'
+import FooterSection from '~/components/sections/Footer.astro';
+import ProjectsSection from '~/components/sections/Projects.astro';
 
 import { getCaseStudies } from '~/utils/caseStudies.astro';
 
@@ -21,7 +18,7 @@ export const getStaticPaths = (async () => {
 
     return posts.map(post => ({
         params: {
-            slug: post.frontmatter.slug
+            slug: post.frontmatter.slug,
         },
         props: {
             frontmatter: post.frontmatter,
@@ -30,20 +27,18 @@ export const getStaticPaths = (async () => {
     }));
 }) satisfies GetStaticPaths;
 
-export const prerender = true
+export const prerender = true;
 
-const { Content, frontmatter } = Astro.props as InferGetStaticPropsType<typeof getStaticPaths>;
+const { Content, frontmatter } = Astro.props as InferGetStaticPropsType<
+    typeof getStaticPaths
+>;
 ---
 
 <BaseLayout title={`${frontmatter.title} | Projects | Maciej Mieńko`}>
     <Header />
 
     <Breadcrumbs
-        crumbs={[
-            ['Home', '/'],
-            ['Projects', '/projects'],
-            [frontmatter.title],
-        ]}
+        crumbs={[['Home', '/'], ['Projects', '/projects'], [frontmatter.title]]}
     />
 
     <div class="date">{frontmatter.date}</div>
@@ -56,12 +51,10 @@ const { Content, frontmatter } = Astro.props as InferGetStaticPropsType<typeof g
         <Content />
     </ArticleContent>
 
-    <ProjectsSection
-        exceptSlugs={[frontmatter.slug]}
-    />
+    <ProjectsSection exceptSlugs={[frontmatter.slug]} />
 
     <FooterSection />
-</ArticleLayout>
+</BaseLayout>
 
 <style lang="scss" is:global>
     .date {

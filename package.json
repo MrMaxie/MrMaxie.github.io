@@ -7,13 +7,15 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "prepare": "husky",
+    "format": "prettier --write src content"
   },
   "dependencies": {
     "aos": "2.3.4"
   },
   "devDependencies": {
-    "@astrojs/mdx": "^2.1.1",
+    "@astrojs/mdx": "^3.1.9",
     "@fontsource-variable/karla": "5.0.19",
     "@fontsource/fira-mono": "^5.0.8",
     "@tabler/icons": "2.47.0",
@@ -21,8 +23,11 @@
     "@tabler/icons-webfont": "2.47.0",
     "@types/aos": "^3.0.7",
     "@types/node": "20.11.19",
-    "astro": "^4.4.0",
+    "astro": "^4.16.12",
     "cheerio": "1.0.0-rc.12",
+    "husky": "9.1.6",
+    "prettier": "3.3.3",
+    "prettier-plugin-astro": "0.14.1",
     "sass": "1.71.0",
     "typescript": "^5.3.3"
   }

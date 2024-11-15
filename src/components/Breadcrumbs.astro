@@ -7,15 +7,19 @@ const { crumbs } = Astro.props;
 ---
 
 <div class="breadcrumbs">
-    {crumbs.map(crumb => {
-        const [name, url] = crumb;
+    {
+        crumbs.map(crumb => {
+            const [name, url] = crumb;
 
-        return url ? (
-            <a class="crumb" href={url}>{name}</a>
-        ) : (
-            <span class="crumb">{name}</span>
-        );
-    })}
+            return url ? (
+                <a class="crumb" href={url}>
+                    {name}
+                </a>
+            ) : (
+                <span class="crumb">{name}</span>
+            );
+        })
+    }
 </div>
 
 <style lang="scss">

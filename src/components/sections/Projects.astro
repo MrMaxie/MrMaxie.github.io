@@ -15,25 +15,26 @@ const projects = await getProjects({
     sortMethod: 'date',
 });
 ---
-{projects.length === 0 ? null : (
-    <Section title="Projects" icon="box-seam">
-        <div class="list">
-            {projects.map(x => ({ ...x.frontmatter, path: x.path })).map((project) => (
-                <div class="item">
-                    <a class="title" href={project.path}>
-                        {project.title}
-                    </a>
-                    <div class="date">
-                        {project.date}
-                    </div>
-                    <div class="description">
-                        {project.description}
-                    </div>
-                </div>
-            ))}
-        </div>
-    </Section>
-)}
+
+{
+    projects.length === 0 ? null : (
+        <Section title="Projects" icon="box-seam">
+            <div class="list">
+                {projects
+                    .map(x => ({ ...x.frontmatter, path: x.path }))
+                    .map(project => (
+                        <div class="item">
+                            <a class="title" href={project.path}>
+                                {project.title}
+                            </a>
+                            <div class="date">{project.date}</div>
+                            <div class="description">{project.description}</div>
+                        </div>
+                    ))}
+            </div>
+        </Section>
+    )
+}
 
 <style lang="scss" scoped>
     .list {
@@ -45,7 +46,7 @@ const projects = await getProjects({
             display: grid;
             gap: 0.5rem;
 
-            grid-template-areas: "title date" "description description";
+            grid-template-areas: 'title date' 'description description';
             grid-template-columns: 1fr auto;
 
             padding-bottom: 1rem;

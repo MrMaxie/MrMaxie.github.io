@@ -11,14 +11,9 @@ import ProjectsSection from '~/components/sections/Projects.astro';
 <BaseLayout title="Projects | Maciej Mieńko">
     <Header />
 
-    <Breadcrumbs
-        crumbs={[
-            ['Home', '/'],
-            ['Projects'],
-        ]}
-    />
+    <Breadcrumbs crumbs={[['Home', '/'], ['Projects']]} />
 
     <ProjectsSection />
 
     <FooterSection />
-</ArticleLayout>
+</BaseLayout>

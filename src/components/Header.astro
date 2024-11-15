@@ -9,23 +9,37 @@ const { isTitleHidden } = Astro.props;
 ---
 
 <nav>
-    {isTitleHidden === true ? null : (
-        <div class="name">
-            Maciej Mieńko<span>aka Maxie</span>
-        </div>
-    )}
+    {
+        isTitleHidden === true ? null : (
+            <div class="name">
+                Maciej Mieńko<span>aka Maxie</span>
+            </div>
+        )
+    }
 
     <div class="spacer"></div>
 
     <a href="/">About</a>
     <a href="/projects">Projects</a>
-    <a href="mailto:mienkomaciej@gmail.com" aria-label="Email Link" class="icon-link">
+    <a
+        href="mailto:mienkomaciej@gmail.com"
+        aria-label="Email Link"
+        class="icon-link"
+    >
         <TablerIcon name="at" />
     </a>
-    <a href="https://github.com/MrMaxie" aria-label="Github Link" class="icon-link">
+    <a
+        href="https://github.com/MrMaxie"
+        aria-label="Github Link"
+        class="icon-link"
+    >
         <TablerIcon name="brand-github" />
     </a>
-    <a href="https://www.linkedin.com/in/maciej-mie%C5%84ko-b0200b190/" aria-label="LinkedIn Link" class="icon-link">
+    <a
+        href="https://www.linkedin.com/in/maciej-mie%C5%84ko-b0200b190/"
+        aria-label="LinkedIn Link"
+        class="icon-link"
+    >
         <TablerIcon name="brand-linkedin" />
     </a>
 </nav>
@@ -54,7 +68,7 @@ const { isTitleHidden } = Astro.props;
             // opacity: 0;
             transition: opacity 0.3s;
 
-            &[data-is-hidden="false"] {
+            &[data-is-hidden='false'] {
                 opacity: 1;
             }
 
@@ -69,7 +83,7 @@ const { isTitleHidden } = Astro.props;
         a {
             color: var(--text-dim);
             text-decoration: none;
-            padding: .5rem;
+            padding: 0.5rem;
             height: 100%;
             display: flex;
             align-items: center;
@@ -77,7 +91,8 @@ const { isTitleHidden } = Astro.props;
             transition: color 0.3s;
             border-radius: 5px;
 
-            &.icon-link, &[data-active="true"] {
+            &.icon-link,
+            &[data-active='true'] {
                 color: var(--text);
             }
 
@@ -85,6 +100,5 @@ const { isTitleHidden } = Astro.props;
                 color: var(--text-accent);
             }
         }
-
     }
 </style>
