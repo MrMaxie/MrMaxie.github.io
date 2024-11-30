@@ -9,7 +9,6 @@
         "preview": "astro preview",
         "astro": "astro",
         "prepare": "husky",
-        "format": "prettier --write src content",
         "prepare-icons": "tsx ./scripts/prepareIcons.ts"
     },
     "dependencies": {
