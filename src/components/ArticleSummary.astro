@@ -1,0 +1,56 @@
+---
+import Tags from './Tags.astro';
+
+type Props = {
+    title: string;
+    date: string;
+    description: string;
+    tags: string[];
+    href: string;
+};
+
+const { title, date, description, tags, href } = Astro.props;
+---
+
+<article>
+    <h3><a class="title" href={href}>{title}</a></h3>
+    <div class="meta">
+        <time class="date">{date}</time>
+        <span class="le-dot">•</span>
+        <Tags tags={tags} />
+    </div>
+    <p class="description">{description}</p>
+</article>
+
+<style lang="scss" scoped>
+    @use '~/styles/breakpoints' as *;
+
+    article {
+        display: flex;
+        flex-direction: column;
+
+        .date {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        .meta {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+
+            .le-dot {
+                color: var(--text-dim);
+            }
+        }
+
+        .description {
+            text-align: justify;
+            font-weight: 300;
+
+            @include for-mobile {
+                font-size: 1.1rem;
+            }
+        }
+    }
+</style>

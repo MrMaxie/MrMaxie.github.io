@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+
+import Routes from '~/utils/routes';
+import BaseLayout from '~/layouts/Base.astro';
+import Paging from '~/components/Paging.astro';
+import { compareDates, formatDate } from '~/utils/date';
+import ArticleSummary from '~/components/ArticleSummary.astro';
+
+export const getStaticPaths = (async () => {
+    const articles = await getCollection('articles');
+    const groupedArticles: Array<typeof articles> = [];
+
+    articles
+        .sort((a, b) => compareDates(b.data.date, a.data.date))
+        .forEach(project => {
+            if (groupedArticles.length === 0 || groupedArticles[groupedArticles.length - 1].length === 10) {
+                groupedArticles.push([]);
+            }
+
+            groupedArticles[groupedArticles.length - 1].push(project);
+        });
+
+    return groupedArticles.map((entries, index) => ({
+        params: {
+            page: String(index + 1),
+        },
+        props: {
+            entries,
+            currentPage: index + 1,
+            allPages: groupedArticles.length,
+        },
+    }));
+}) satisfies GetStaticPaths;
+
+const { entries, allPages, currentPage } = Astro.props as InferGetStaticPropsType<
+    typeof getStaticPaths
+>;
+---
+
+<BaseLayout
+    title={['Blog']}
+    crumbs={[{ label: 'Blog' }]}
+>
+    {entries.map(x => (
+        <ArticleSummary
+            title={x.data.title}
+            date={formatDate(x.data.date)}
+            tags={x.data.tags}
+            href={Routes.article(x.slug)}
+            description={x.data.description}
+        />
+    ))}
+
+    <Paging
+        id="blog"
+        currentPage={currentPage}
+        allPages={allPages}
+        hrefTemplate="/blog/page/{i}"
+    />
+</BaseLayout>

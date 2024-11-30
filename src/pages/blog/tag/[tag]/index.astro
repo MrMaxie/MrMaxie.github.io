@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import { tagToSlug } from '~/utils/tagToSlug';
+
+export const getStaticPaths = (async () => {
+    const tags = new Set<string>();
+
+    const articles = await getCollection('articles');
+
+    articles.forEach(article => {
+        article.data.tags.forEach(tag => {
+            tags.add(tagToSlug(tag));
+        });
+    });
+
+    return Array.from(tags).map(tag => ({
+        params: {
+            tag,
+        },
+    }));
+}) satisfies GetStaticPaths;
+
+const { tag } = Astro.params;
+
+return Astro.rewrite(`/blog/tag/${tag}/1`);
+---

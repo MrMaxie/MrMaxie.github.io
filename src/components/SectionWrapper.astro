@@ -1,17 +1,14 @@
 ---
-import TablerIcon from './TablerIcon.astro';
-
-interface Props {
-    icon?: string;
+type Props = {
     title: string;
-}
+};
 
-const { title, icon } = Astro.props;
+const { title } = Astro.props;
 ---
 
 <section class="section-wrapper">
     <h1>
-        {icon && <TablerIcon name={icon} />}
+        <slot name="icon" />
         {title}
     </h1>
     <div class="content">

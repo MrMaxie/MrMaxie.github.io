@@ -1,12 +1,26 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 
-// https://astro.build/config
+import sitemap from '@astrojs/sitemap';
+
+import playformCompress from '@playform/compress';
+
+import purgecss from 'astro-purgecss';
+
 export default defineConfig({
-    integrations: [mdx()],
+    site: 'https://maxie.dev/',
+    integrations: [
+        mdx(),
+        sitemap(),
+        playformCompress(),
+        purgecss(),
+    ],
     output: 'static',
     outDir: 'docs',
     build: {
         assets: 'static',
+    },
+    prefetch: {
+        prefetchAll: true,
     },
 });

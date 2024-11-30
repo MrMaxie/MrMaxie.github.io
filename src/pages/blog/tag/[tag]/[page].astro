@@ -1,0 +1,97 @@
+---
+import BaseLayout from '~/layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import { tagToSlug } from '~/utils/tagToSlug';
+import { compareDates, formatDate } from '~/utils/date';
+import ArticleSummary from '~/components/ArticleSummary.astro';
+import Routes from '~/utils/routes';
+import Paging from '~/components/Paging.astro';
+
+export const getStaticPaths = (async () => {
+    const articles = await getCollection('articles');
+    const tags = new Set<string>();
+    const tagsNiceNames = new Map<string, string>();
+
+    articles.forEach(article => {
+        article.data.tags.forEach(tag => {
+            tags.add(tagToSlug(tag));
+            tagsNiceNames.set(tagToSlug(tag), tag);
+        });
+    });
+
+    const findNiceName = (slug: string) => {
+        return tagsNiceNames.get(slug) ?? slug;
+    };
+
+    const groupedArticles: Array<{
+        tag: string;
+        entries: Array<typeof articles>;
+    }> = [];
+
+    Array.from(tags).forEach(tag => {
+        const group = {
+            tag,
+            entries: [] as Array<typeof articles>,
+        };
+
+        articles
+            .filter(article => article.data.tags.some(articleTag => tagToSlug(articleTag) === tag))
+            .sort((a, b) => compareDates(b.data.date, a.data.date))
+            .forEach(project => {
+                if (group.entries.length === 0 || group.entries[groupedArticles.length - 1].length === 10) {
+                    group.entries.push([]);
+                }
+
+                group.entries[group.entries.length - 1].push(project);
+            });
+
+        groupedArticles.push(group);
+    });
+
+    return groupedArticles.flatMap(({ tag, entries }) =>
+        entries.map((subentries, index) => ({
+            params: {
+                page: String(index + 1),
+                tag,
+            },
+            props: {
+                entries: subentries,
+                currentPage: index + 1,
+                allPages: entries.length,
+                tagName: findNiceName(tag),
+            },
+        }))
+    );
+}) satisfies GetStaticPaths;
+
+const { entries, allPages, currentPage, tagName } = Astro.props as InferGetStaticPropsType<
+    typeof getStaticPaths
+>;
+const { tag } = Astro.params;
+---
+
+<BaseLayout
+    title={['Blog']}
+    crumbs={[
+        { label: 'Blog', href: Routes.articles() },
+        { label: `Tag: ${tagName}` },
+    ]}
+>
+    {entries.map(x => (
+        <ArticleSummary
+            title={x.data.title}
+            date={formatDate(x.data.date)}
+            tags={x.data.tags}
+            href={Routes.article(x.slug)}
+            description={x.data.description}
+        />
+    ))}
+
+    <Paging
+        id="blog-tag"
+        currentPage={currentPage}
+        allPages={allPages}
+        hrefTemplate=`/blog/tag/${tag}/{i}`
+    />
+</BaseLayout>

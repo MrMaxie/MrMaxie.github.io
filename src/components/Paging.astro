@@ -1,0 +1,92 @@
+---
+type Props = {
+    id: string;
+    currentPage: number;
+    allPages: number;
+    hrefTemplate: string;
+};
+
+const { id, currentPage, allPages, hrefTemplate } = Astro.props;
+
+const links = Array(allPages)
+    .fill(0)
+    .map((_, i) => ({
+        page: i + 1,
+        isActive: i + 1 === currentPage,
+        href: hrefTemplate.replace('{i}', String(i + 1)),
+    }));
+
+const [prev, next] = [-1, 1]
+    .map(i => currentPage + i)
+    .map(page => ({
+        page,
+        isPossible: page > 0 && page <= allPages,
+        href: hrefTemplate.replace('{i}', String(page)),
+    }))
+
+const doHidePaging = allPages <= 1;
+---
+
+{!doHidePaging && (
+    <nav>
+        <a
+            href={prev.isPossible && prev.href}
+            data-disabled={!prev.isPossible}
+            transition:name={`paging-${id}-prev`}
+        >
+            ← Previous
+        </a>
+        <div class="pages">
+            {links.map(({ page, isActive, href }) => (
+                <a
+                    href={href}
+                    data-disabled={isActive}
+                    transition:name={`paging-${id}-${page}`}
+                >
+                    {page}
+                </a>
+            ))}
+        </div>
+        <a
+            href={next.isPossible && next.href}
+            data-disabled={!next.isPossible}
+            transition:name={`paging-${id}-next`}
+        >
+            Next →
+        </a>
+    </nav>
+)}
+
+<style lang="scss">
+    @use '~/styles/breakpoints' as *;
+
+    nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        [data-disabled] {
+            color: var(--text-dim);
+            pointer-events: none;
+        }
+
+        .pages {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        @include for-mobile {
+            a {
+                display: block;
+                padding: 0.5rem 1rem;
+                background: var(--background-variant);
+
+                &[data-disabled] {
+                    background: transparent;
+                }
+            }
+        }
+    }
+</style>

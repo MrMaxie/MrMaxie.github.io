@@ -1,4 +1,7 @@
 ---
+import Routes from '~/utils/routes';
+import { tagToSlug } from '~/utils/tagToSlug';
+
 interface Props {
     tags: string[];
 }
@@ -7,20 +10,33 @@ const { tags } = Astro.props;
 ---
 
 <div class="tags">
-    {tags.map(tag => <span class="tag">{tag}</span>)}
+    {tags.map(tag => (
+        <a
+            class="tag"
+            href={Routes.tag(tagToSlug(tag))}
+        >
+            {tag}
+        </a>
+    ))}
 </div>
 
 <style lang="scss">
     .tags {
-        display: flex;
+        display: inline-flex;
         gap: 0.5rem;
-        margin-bottom: 1rem;
 
         .tag {
             padding: 0.1rem 0.3rem;
             border-radius: 5px;
             background-color: var(--background-variant);
             font-size: 0.8rem;
+            color: var(--text-dim);
+            transition: background-color 0.3s, color 0.3s;
+
+            &:hover {
+                background-color: var(--text-accent);
+                color: var(--background);
+            }
         }
     }
 </style>

@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import ArticleLayout from '~/layouts/ArticleLayout.astro';
+import { formatDate } from '~/utils/date';
+
+export const getStaticPaths = (async () => {
+    const articles = await getCollection('articles');
+
+    return articles.map(entry => ({
+        params: {
+            slug: entry.slug,
+        },
+        props: {
+            entry,
+        },
+    }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props as InferGetStaticPropsType<
+    typeof getStaticPaths
+>;
+const { Content } = await entry.render();
+---
+
+<ArticleLayout
+    title={entry.data.title ?? ''}
+    titleSuffix="Blog"
+    crumbs={[
+        { label: 'Blog', href: '/blog' },
+        { label: 'Current Post' },
+    ]}
+    date={formatDate(entry.data.date)}
+    tags={entry.data.tags}
+    description={entry.data.description}
+>
+    <Content />
+</ArticleLayout>

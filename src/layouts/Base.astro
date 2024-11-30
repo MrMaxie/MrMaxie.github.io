@@ -1,17 +1,28 @@
 ---
-import 'aos/dist/aos.css';
+import type { ComponentProps } from 'astro/types';
+import { slide, ViewTransitions } from 'astro:transitions';
 
-import '@fontsource/fira-mono/400.css';
-import '@fontsource/fira-mono/500.css';
-import '@fontsource/fira-mono/700.css';
+import '@fontsource-variable/fira-code';
 import '@fontsource-variable/karla';
-import '@tabler/icons-webfont/tabler-icons.css';
+
+import Nav from '~/components/sections/Nav.astro';
+import Header from '~/components/sections/Header.astro';
+import Footer from '~/components/sections/Footer.astro';
+import Breadcrumbs from '~/components/Breadcrumbs.astro';
 
 interface Props {
-    title: string;
+    title?: string[];
+    smallerHeader?: boolean;
+    description?: string;
+    crumbs?: ComponentProps<typeof Breadcrumbs>['crumbs'];
 }
 
-const { title } = Astro.props;
+const {
+    title = [],
+    crumbs,
+    description,
+    smallerHeader = false,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -20,35 +31,44 @@ const { title } = Astro.props;
         <meta charset="UTF-8" />
         <meta
             name="description"
-            content="Programmer's portfolio - Maciej Mieńko"
+            content={description ?? "Programmer's portfolio - Maciej Mieńko"}
         />
         <meta name="viewport" content="width=device-width" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <title>{title}</title>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16">
+        <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
+        <link rel="sitemap" href="/sitemap-index.xml" />
+        <title>{[...title, 'Maciej Mieńko'].join(' | ')}</title>
+        <ViewTransitions />
     </head>
     <body>
         <main>
-            <slot />
+            <Nav />
+            <Header smaller={smallerHeader} />
+            <div class="main__content" transition:animate={slide({ duration: '0.5s' })}>
+                {crumbs && (
+                    <Breadcrumbs
+                        crumbs={[
+                            { label: 'Home', href: '/' },
+                            ...crumbs
+                        ]}
+                    />
+                )}
+                <slot />
+            </div>
+            <Footer />
         </main>
     </body>
 </html>
 
-<script src="~/scripts/initAos.ts"></script>
-
 <style is:global lang="scss">
     :root {
-        --background: #14171a; // or #151515
-        --background-variant: #282d30; // #202022
+        --background: #14171a;
+        --background-variant: #282d30;
         --text: #f0f0f0;
         --text-dim: #afafbf;
         --text-accent: #66ccff;
-
-        --old-bg2: #2d2a2e;
-        --old-bg: #423f42;
-        --old-text: #fcfcfa;
-        --old-text-dim: #939293;
-        --old-column-width: 800px;
-        --old-bg-border: #565256;
     }
 
     body {
@@ -58,8 +78,32 @@ const { title } = Astro.props;
         padding: 0;
         margin: 0;
         background-color: var(--background);
+        background: radial-gradient(
+            circle at 80% 80%,
+            var(--background) 40%,
+            #0d0e0f 100%
+        );
+        background-attachment: fixed;
         font-weight: normal;
         font-size: 16px;
+        min-height: 100dvh;
+        position: relative;
+    }
+
+    code {
+        font-family: 'Fira Code', monospace;
+    }
+
+    @media (max-width: 768px) {
+        html {
+            font-size: 15px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        html {
+            font-size: 14px;
+        }
     }
 
     a {
@@ -96,6 +140,17 @@ const { title } = Astro.props;
         color: var(--text);
         font-size: 16px;
         line-height: 1.6;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .main__content {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        flex: 1;
     }
 
     h1,
@@ -103,6 +158,6 @@ const { title } = Astro.props;
     h3 {
         margin: 0;
         padding: 0;
-        margin-bottom: 1rem;
+        margin-bottom: 0;
     }
 </style>

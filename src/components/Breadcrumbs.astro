@@ -1,30 +1,29 @@
 ---
 interface Props {
-    crumbs: Array<[name: string, url?: string]>;
+    crumbs: Array<{
+        label: string;
+        href?: string;
+    }>;
 }
 
-const { crumbs } = Astro.props;
+const { crumbs = [] } = Astro.props;
 ---
 
-<div class="breadcrumbs">
+<div class="breadcrumbs" transition:name="breadcrumbs">
     {
-        crumbs.map(crumb => {
-            const [name, url] = crumb;
-
-            return url ? (
-                <a class="crumb" href={url}>
-                    {name}
-                </a>
-            ) : (
-                <span class="crumb">{name}</span>
-            );
-        })
+        crumbs.map(({ label, href }) => href ? (
+            <a class="crumb" href={href}>
+                {label}
+            </a>
+        ) : (
+            <span class="crumb">{label}</span>
+        ))
     }
 </div>
 
 <style lang="scss">
     .breadcrumbs {
-        margin-bottom: 1rem;
+        font-size: 0.9rem;
 
         .crumb {
             &:last-child:after {

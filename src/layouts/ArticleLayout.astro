@@ -1,0 +1,53 @@
+---
+type Props = {
+    title: string;
+    titleSuffix: string;
+    crumbs: { label: string; href?: string }[];
+    date: string;
+    tags: string[];
+    description: string;
+};
+
+import BaseLayout from '~/layouts/Base.astro';
+import Tags from '~/components/Tags.astro';
+import ArticleContent from '~/components/ArticleContent.astro';
+import RelatedArticles from '~/components/RelatedArticles.astro';
+
+const { title, titleSuffix, crumbs, date, tags, description } = Astro.props;
+---
+
+<BaseLayout
+    smallerHeader
+    title={[title, titleSuffix]}
+    crumbs={crumbs}
+    description={description}
+>
+    <h1>{title}</h1>
+
+    <div class="meta">
+        <span>{date}</span>
+        <span><Tags tags={tags} /></span>
+    </div>
+
+    <ArticleContent>
+        <slot />
+    </ArticleContent>
+
+    <RelatedArticles
+        currentTitle={title}
+        tags={tags}
+        date={date}
+    />
+</BaseLayout>
+
+<style scoped lang="scss">
+    .meta {
+        font-size: 0.9rem;
+        color: var(--text-dim);
+
+        > span:not(:last-child):after {
+            content: '•';
+            margin: 0 0.5rem;
+        }
+    }
+</style>

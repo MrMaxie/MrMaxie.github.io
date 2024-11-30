@@ -1,0 +1,98 @@
+---
+title: "PHP Game Development?"
+description: >
+  A story about a teenage attempt to push the boundaries of PHP by creating a game inspired by Minecraft. From building native plugins to experimenting with OpenGL and hybrid solutions, this journey explores the challenges, failures, and lessons learned.
+date: 2024.02.22
+tags:
+  - PHP
+  - Game Development
+  - C/C++
+---
+
+In 2013, as a curious 16-year-old, I embarked on an ambitious journey: could I make a game using PHP? Not just any game, but something inspired by **Minecraft** — a 3D block-building world that seemed galaxies away from PHP's comfort zone as a web scripting language. The idea was equal parts thrilling and ridiculous, but I couldn't resist.
+
+What followed was a chaotic adventure of code, failures, and glimmers of hope. Armed with determination, I experimented with three different approaches to bring this idea to life. Here's how it went down. 🚀
+
+## The Problem That Sparked a Journey
+
+PHP is a language built for the web. It powers forums, blogs, and online stores — not games. But I couldn't help wondering: *What if?* Could PHP handle rendering graphics? Could it manage game logic in real time?
+
+I knew this was a long shot, but it wasn't about practicality — it was about pushing boundaries and learning. And, hey, it was the kind of challenge that gets a teenager excited. 😅
+
+## Approach 1: Building a Native PHP Plugin
+
+My first idea was bold: why not create a PHP extension in C that could integrate directly with graphics libraries like **DirectX**, **OpenGL**, or **SDL**? If I could pull this off, I'd have a foundation to create a PHP-based game engine capable of rendering 3D environments.
+
+I dove headfirst into PHP's source code. My goal was to write a plugin that would let me control a graphics library using PHP scripts, like this:
+
+```php
+<?php
+$game = new GameEngine();
+$game->initializeGraphics("OpenGL");
+$game->renderCube(0, 0, 0, "stone");
+```
+
+It sounded simple in theory, but in practice, it was like trying to climb Mount Everest in flip-flops. PHP's internals were a labyrinth of macros and memory management quirks, and as a novice programmer, I was woefully unprepared. Writing even a single function to bridge PHP and OpenGL felt like performing brain surgery with a spoon.
+
+After weeks of struggle, I had *something* — a rudimentary plugin that could initialize a window using OpenGL. But that was it. Performance was laughable, rendering was buggy, and the whole thing felt like trying to fit a square peg into a round hole.
+
+Still, it wasn't a total loss. I gained a newfound respect for PHP's architecture and a deeper understanding of how extensions work. But I knew this wasn't the way forward.
+
+## Approach 2: Render Something—Anything!
+
+Having learned my lesson from the first attempt, I shifted focus. This time, my goal was more modest: render anything natively in PHP. Forget Minecraft; I just wanted a basic game with a window and some moving graphics.
+
+I stumbled upon an ancient **FFI (Foreign Function Interface)** plugin for PHP, which theoretically allowed PHP to call functions from external C libraries like OpenGL or SDL. Using this, I set out to create a minimal game engine.
+
+The idea was straightforward: use FFI to interact with OpenGL functions directly from PHP. For example, something like this:
+
+```php
+<?php
+$window = new Window("OpenGL Example");
+$window->drawTriangle(0, 0, 1, 1, 0, 1, "red");
+$window->render();
+```
+
+I wanted a simple window, a shape or two, and maybe some basic interactions. Setting up FFI was clunky, as the plugin was outdated and poorly documented. But after a few crashes (and a lot of coffee ☕), I managed to render a spinning triangle using OpenGL—all controlled by PHP!
+
+I was terrified... for about five minutes. The performance was unpromising, and the whole thing was fragile. One wrong move, and the program would crash. But for the first time, I saw a glimmer of hope. PHP was sort of doing the job, even if it was limping along. Yet I couldn't shake the feeling that I was heading in the wrong direction. I wasn't making Minecraft; I was struggling just to make a window spin a triangle. 🤷‍♂️
+
+## Approach 3: PHP and C/C++—A Match Made in Heaven?
+
+By this point, I realized PHP wasn't cut out for rendering graphics natively. So I decided to cheat a little: let **C++ handle** the graphics, while PHP managed the game logic. This hybrid approach felt like a compromise, but it was my best shot at creating something playable.
+
+I built a standalone C++ application using **SDL** and **OpenGL** to handle rendering. PHP communicated with this application via FFI or IPC (Inter-Process Communication). Here's how it worked:
+
+1. PHP sent commands (e.g., “add a block at (0, 0, 0)”).
+2. The C++ app processed the commands and updated the graphics.
+3. PHP maintained control over the game's logic and flow.
+
+Here's an example of what the PHP side looked like:
+
+```php
+<?php
+$engine = new GameEngine(); // C++ backend
+$engine->addBlock(0, 0, 0, "stone");
+
+while ($engine->isRunning()) {
+    $event = $engine->getEvent();
+
+    // Handle game logic based on events
+}
+```
+
+For the first time, I had something resembling a game. Blocks appeared on the screen, and I could even interact with them in real time. But the hybrid approach felt like a betrayal of my original goal. If I needed C++ to do the heavy lifting, was I really making a game in PHP? It worked, but it wasn't the victory I'd hoped for.
+
+## Lessons Learned
+
+Each failed attempt taught me something valuable:
+
+1. **Tools Matter:** PHP is fantastic for web development, but forcing it into game development was like trying to cut a steak with a spoon. Use the right tool for the job. I mean until you can't that well.
+2. **Small Wins Are Wins:** Even when the results were underwhelming, each step forward felt like an achievement. From rendering a triangle to managing hybrid logic, I learned that progress—even tiny progress—is worth celebrating. 🎉
+3. **It's About the Journey:** The real victory wasn't the game I didn't make — it was the skills I gained along the way. Understanding PHP's internals, exploring OpenGL, and building hybrid systems made me a better developer. 🚀
+
+## The Story Isn't Over... Yet
+
+This project didn't lead to a PHP-powered Minecraft clone, but it ignited a passion for exploring the boundaries of what's possible. I learned that failure isn't the end — it's part of the process. And while I didn't follow the light at the end of the tunnel back then, I haven't forgotten about it.
+
+Years later, with more experience and better tools at my disposal, I'm planning to revisit this challenge. The dream of creating a game in PHP still lingers, and this time, I'm determined to see it through. Maybe it won't be Minecraft, and maybe it won't even be groundbreaking, but it will be a testament to how far I've come—and to how curiosity and persistence can fuel even the wildest of ideas. Stay tuned. 🚀✨

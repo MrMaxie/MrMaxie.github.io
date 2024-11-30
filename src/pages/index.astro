@@ -1,15 +1,36 @@
 ---
-import BaseLayout from '../layouts/Base.astro';
-import Header from '../components/Header.astro';
+import BaseLayout from '~/layouts/Base.astro';
+import ProjectsList from '~/components/sections/ProjectsList.astro';
+import { getCollection } from 'astro:content';
+import { compareDates, formatDate } from '~/utils/date';
+import ArticleSummary from '~/components/ArticleSummary.astro';
+import Routes from '~/utils/routes';
 
-import MeSection from '../components/sections/Me.astro';
-import ProjectsSection from '../components/sections/Projects.astro';
-import FooterSection from '../components/sections/Footer.astro';
+const articles = await getCollection('articles');
+
+const lastArticles = articles
+    .sort((a, b) => compareDates(b.data.date, a.data.date))
+    .slice(0, 3);
 ---
 
-<BaseLayout title="Maciej Mieńko">
-    <Header isTitleHidden={true} />
-    <MeSection />
-    <ProjectsSection />
-    <FooterSection />
+<BaseLayout>
+    <h1>Latest articles</h1>
+    {lastArticles.map(article => (
+        <ArticleSummary
+            title={article.data.title}
+            date={formatDate(article.data.date)}
+            tags={article.data.tags}
+            description={article.data.description}
+            href={Routes.article(article.slug)}
+        />
+    ))}
+    <a href={Routes.articles()} class="read-more">View all articles</a>
 </BaseLayout>
+
+<style scoped lang="scss">
+    .read-more {
+        display: block;
+        text-align: center;
+        margin-top: 2rem;
+    }
+</style>

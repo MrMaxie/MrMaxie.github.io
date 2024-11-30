@@ -4,40 +4,81 @@ import { Image as AstroImage } from 'astro:assets';
 interface Props {
     alt: string;
     src: ImageMetadata;
-    type: 'icon';
-    aos?: string;
+    isRounded?: boolean;
+    isCentered?: boolean;
+    isFullWidth?: boolean;
+    isBorderd?: boolean;
+    width?: number;
+    sub?: string;
 }
 
-const { alt, src, type, aos } = Astro.props;
+const {
+    alt,
+    src,
+    isRounded,
+    isCentered,
+    isFullWidth,
+    isBorderd,
+    width,
+    sub,
+} = Astro.props;
 ---
 
-<div class="image-wrapper" data-type={type}>
-    <div class="image" data-aos={aos ?? 'zoom-in-up'}>
-        <AstroImage src={src} alt={alt} loading="eager" />
+<div class:list={[
+    'image-wrapper',
+    {
+        centered: isCentered,
+        rounded: isRounded,
+        'width-full': isFullWidth,
+        bordered: isBorderd,
+    },
+]}>
+    <div class="image">
+        <AstroImage
+            width={width}
+            src={src}
+            alt={alt}
+            loading="eager"
+        />
     </div>
+    {sub && (
+        <div class="sub">{sub}</div>
+    )}
 </div>
 
 <style lang="scss" scoped>
     .image-wrapper {
         display: flex;
-        justify-content: center;
         align-items: center;
+        flex-direction: column;
         margin-bottom: 1rem;
 
-        &[data-type='icon'] {
-            .image {
-                width: 10rem;
-                height: 10rem;
-            }
+        .image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .image {
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                border-radius: 50%;
-            }
+        &.centered {
+            justify-content: center;
+        }
+
+        &.rounded .image img {
+            border-radius: 1rem;
+        }
+
+        &.width-full, &.width-full .image {
+            width: 100%;
+        }
+
+        &.bordered .image img {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sub {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
         }
     }
 </style>

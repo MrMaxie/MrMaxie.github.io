@@ -1,0 +1,95 @@
+---
+type Props = {
+    smaller?: boolean;
+};
+
+const { smaller = false } = Astro.props;
+---
+
+<section class:list={['header', { 'header--smaller': smaller }]} transition:name="header">
+    <div class="name">Maciej (Maxie) Mieńko</div>
+    <div class="sub">
+        Professional overthinker with a keyboard
+    </div>
+    <div
+        class="avatar"
+        transition:name="header--avatar"
+    ></div>
+</section>
+
+<div class="separator"></div>
+
+<style scoped lang="scss">
+    @use '~/styles/breakpoints' as *;
+
+    .header {
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+            'name avatar'
+            'sub avatar';
+        gap: 1rem;
+
+        @include for-mobile {
+            grid-template-areas:
+                'name name'
+                'sub avatar';
+        }
+
+        .avatar {
+            grid-area: avatar;
+            aspect-ratio: 1 / 1;
+            width: 10rem;
+            height: 10rem;
+            position: relative;
+
+            border-radius: 100%;
+            background: url('/avatar.webp') center no-repeat;
+            background-image: image-set(
+                url('/avatar.webp') type('image/webp'),
+                url('/avatar.jpg') type('image/jpeg')
+            );
+            background-size: cover;
+            opacity: 1;
+            transition: opacity 0.3s, width 0.3s, height 0.3s;
+            align-self: center;
+
+            @include for-mobile {
+                width: 7rem;
+                height: 7rem;
+            }
+        }
+
+        &--smaller .avatar {
+            width: 7rem;
+            height: 7rem;
+
+            @include for-mobile {
+                width: 5rem;
+                height: 5rem;
+            }
+        }
+
+        .name {
+            grid-area: name;
+            font-size: 3rem;
+            font-weight: bold;
+
+            @include for-mobile {
+                font-size: 2rem;
+            }
+        }
+
+        .sub {
+            grid-area: sub;
+            color: var(--text-dim);
+        }
+    }
+
+    .separator {
+        height: 1px;
+        background-color: var(--background-variant);
+    }
+</style>
