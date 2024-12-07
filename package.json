@@ -8,7 +8,6 @@
         "build": "astro build",
         "preview": "astro preview",
         "astro": "astro",
-        "prepare": "husky",
         "prepare-icons": "tsx ./scripts/prepareIcons.ts"
     },
     "dependencies": {
