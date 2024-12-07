@@ -42,6 +42,7 @@ const { entries, allPages, currentPage } = Astro.props as InferGetStaticPropsTyp
 <BaseLayout
     title={['Blog']}
     crumbs={[{ label: 'Blog' }]}
+    canonical={currentPage === 1 ? '/blog' : '!default'}
 >
     {entries.map(x => (
         <ArticleSummary

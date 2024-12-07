@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /blog
+Allow: /blog/article/*
+Allow: /blog/tag/*
+Disallow: /blog/article
+Disallow: /blog/tag
+Disallow: /blog/page
+
+Sitemap: https://maxie.dev/sitemap-index.xml

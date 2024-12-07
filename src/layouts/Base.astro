@@ -9,20 +9,40 @@ import Nav from '~/components/sections/Nav.astro';
 import Header from '~/components/sections/Header.astro';
 import Footer from '~/components/sections/Footer.astro';
 import Breadcrumbs from '~/components/Breadcrumbs.astro';
+import { undefined } from 'astro:schema';
 
-interface Props {
+type Props = {
     title?: string[];
     smallerHeader?: boolean;
     description?: string;
     crumbs?: ComponentProps<typeof Breadcrumbs>['crumbs'];
-}
+    canonical?: string | '!default' | '!remove';
+};
 
 const {
     title = [],
     crumbs,
     description,
     smallerHeader = false,
+    canonical = '!default',
 } = Astro.props;
+
+let canonicalUrl: string | false = false;
+
+switch (canonical) {
+    case '!default':
+        canonicalUrl = `${Astro.site}${Astro.url.pathname}`;
+        break;
+    case '!remove':
+        canonicalUrl = false;
+        break;
+    default:
+        canonicalUrl = `${Astro.site}${canonical}`;
+        break;
+}
+
+canonicalUrl = canonicalUrl && canonicalUrl.replace(/\/+/g, '/').replace(':/', '://');
+
 ---
 
 <!doctype html>
@@ -39,6 +59,7 @@ const {
         <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16">
         <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
         <link rel="sitemap" href="/sitemap-index.xml" />
+        {canonicalUrl ? <link rel="canonical" href={canonicalUrl} /> : null}
         <title>{[...title, 'Maciej Mieńko'].join(' | ')}</title>
         <ViewTransitions />
     </head>

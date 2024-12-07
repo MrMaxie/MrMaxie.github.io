@@ -2,7 +2,10 @@
 import Base from './Base.astro';
 import Error404Icon from '~/components/icons/Error404.astro';
 ---
-<Base title={['Not Found']}>
+<Base
+    title={['Not Found']}
+    canonical="!remove"
+>
     <div class="error-page">
         <Error404Icon />
         <h1>Not Found</h1>
