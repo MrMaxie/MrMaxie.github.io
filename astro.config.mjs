@@ -1,10 +1,7 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
-
 import sitemap from '@astrojs/sitemap';
-
 import playformCompress from '@playform/compress';
-
 import purgecss from 'astro-purgecss';
 
 export default defineConfig({
@@ -16,7 +13,6 @@ export default defineConfig({
         purgecss(),
     ],
     output: 'static',
-    outDir: 'docs',
     build: {
         assets: 'static',
     },

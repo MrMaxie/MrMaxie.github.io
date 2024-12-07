@@ -30,7 +30,6 @@
         "@types/node": "20.11.19",
         "astro": "^4.16.12",
         "cheerio": "1.0.0-rc.12",
-        "husky": "9.1.6",
         "prettier": "3.3.3",
         "prettier-plugin-astro": "0.14.1",
         "sass": "1.71.0",
