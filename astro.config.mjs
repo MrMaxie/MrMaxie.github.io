@@ -10,20 +10,10 @@ export default defineConfig({
         mdx(),
         sitemap({
             filter: url => {
-                const excludedExactPaths = [
-                    '/blog/article',
-                    '/blog/tag',
-                    '/blog/page',
-                ];
-
                 if (
-                    url.match(/^\/blog\/tag\/[^/]+\/1$/) ||
-                    url.match(/^\/blog\/page\/1$/)
+                    url.match(/\/blog\/tag\/[^/]+\/1\/?$/) ||
+                    url.match(/\/blog\/page\/1\/?$/)
                 ) {
-                    return false;
-                }
-
-                if (excludedExactPaths.includes(url)) {
                     return false;
                 }
 
