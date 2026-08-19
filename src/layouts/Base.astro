@@ -1,14 +1,14 @@
 ---
+import { ClientRouter, slide } from 'astro:transitions';
 import type { ComponentProps } from 'astro/types';
-import { slide, ViewTransitions } from 'astro:transitions';
 
 import '@fontsource-variable/fira-code';
 import '@fontsource-variable/karla';
 
-import Nav from '~/components/sections/Nav.astro';
-import Header from '~/components/sections/Header.astro';
-import Footer from '~/components/sections/Footer.astro';
-import Breadcrumbs from '~/components/Breadcrumbs.astro';
+import Breadcrumbs from '~/components/site/Breadcrumbs.astro';
+import Footer from '~/components/site/Footer.astro';
+import Header from '~/components/site/Header.astro';
+import Nav from '~/components/site/Nav.astro';
 
 type Props = {
     title?: string[];
@@ -40,27 +40,25 @@ switch (canonical) {
         break;
 }
 
-canonicalUrl = canonicalUrl && canonicalUrl.replace(/\/+/g, '/').replace(':/', '://');
-
+if (canonicalUrl) {
+    canonicalUrl = canonicalUrl.replace(/\/+/g, '/').replace(':/', '://');
+}
 ---
 
 <!doctype html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8" />
-        <meta
-            name="description"
-            content={description ?? "Programmer's portfolio - Maciej Mieńko"}
-        />
-        <meta name="viewport" content="width=device-width" />
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <meta charset="UTF-8">
+        <meta name="description" content={description ?? "Programmer's portfolio - Maciej Mieńko"}>
+        <meta name="viewport" content="width=device-width">
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
         <link rel="icon" href="/favicon.ico" type="image/x-icon">
         <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16">
         <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
-        <link rel="sitemap" href="/sitemap-index.xml" />
+        <link rel="sitemap" href="/sitemap-index.xml">
         {canonicalUrl ? <link rel="canonical" href={canonicalUrl} /> : null}
         <title>{[...title, 'Maciej Mieńko'].join(' | ')}</title>
-        <ViewTransitions />
+        <ClientRouter />
     </head>
     <body>
         <main>
@@ -82,102 +80,98 @@ canonicalUrl = canonicalUrl && canonicalUrl.replace(/\/+/g, '/').replace(':/', '
     </body>
 </html>
 
-<style is:global lang="scss">
-    :root {
-        --background: #14171a;
-        --background-variant: #282d30;
-        --text: #f0f0f0;
-        --text-dim: #afafbf;
-        --text-accent: #66ccff;
+<style is:global>
+:root {
+    --background: #14171a;
+    --background-variant: #282d30;
+    --text: #f0f0f0;
+    --text-dim: #afafbf;
+    --text-accent: #66ccff;
+}
+
+body {
+    font-family: "Karla Variable", sans-serif;
+    color: var(--text);
+
+    padding: 0;
+    margin: 0;
+    background-color: var(--background);
+    background-image: radial-gradient(circle at 80% 80%, var(--background) 40%, #0d0e0f 100%);
+    background-attachment: fixed;
+    font-weight: normal;
+    font-size: 16px;
+    min-height: 100dvh;
+    position: relative;
+}
+
+code {
+    font-family: "Fira Code", monospace;
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 15px;
     }
+}
 
-    body {
-        font-family: 'Karla Variable', sans-serif;
-        color: var(--text);
-
-        padding: 0;
-        margin: 0;
-        background-color: var(--background);
-        background: radial-gradient(
-            circle at 80% 80%,
-            var(--background) 40%,
-            #0d0e0f 100%
-        );
-        background-attachment: fixed;
-        font-weight: normal;
-        font-size: 16px;
-        min-height: 100dvh;
-        position: relative;
+@media (max-width: 480px) {
+    html {
+        font-size: 14px;
     }
+}
 
-    code {
-        font-family: 'Fira Code', monospace;
-    }
+a {
+    color: var(--text-accent);
+    text-decoration: none;
+}
 
-    @media (max-width: 768px) {
-        html {
-            font-size: 15px;
-        }
-    }
+a:hover {
+    text-decoration: underline;
+}
 
-    @media (max-width: 480px) {
-        html {
-            font-size: 14px;
-        }
-    }
+* {
+    box-sizing: border-box;
+}
 
-    a {
-        color: var(--text-accent);
-        text-decoration: none;
+*::-webkit-scrollbar-track {
+    background-color: var(--background);
+}
 
-        &:hover {
-            text-decoration: underline;
-        }
-    }
+*::-webkit-scrollbar {
+    width: 12px;
+    background-color: var(--background);
+}
 
-    * {
-        box-sizing: border-box;
-    }
+*::-webkit-scrollbar-thumb {
+    background-color: var(--text-dim);
+}
 
-    *::-webkit-scrollbar-track {
-        background-color: var(--background);
-    }
+main {
+    margin: auto;
+    padding: 1rem;
+    width: 800px;
+    max-width: 100%;
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
 
-    *::-webkit-scrollbar {
-        width: 12px;
-        background-color: var(--background);
-    }
+.main__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+}
 
-    *::-webkit-scrollbar-thumb {
-        background-color: var(--text-dim);
-    }
-
-    main {
-        margin: auto;
-        padding: 1rem;
-        width: 800px;
-        max-width: 100%;
-        color: var(--text);
-        font-size: 16px;
-        line-height: 1.6;
-        min-height: 100dvh;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .main__content {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        flex: 1;
-    }
-
-    h1,
-    h2,
-    h3 {
-        margin: 0;
-        padding: 0;
-        margin-bottom: 0;
-    }
+h1,
+h2,
+h3 {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 0;
+}
 </style>

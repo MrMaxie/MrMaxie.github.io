@@ -8,20 +8,15 @@ type Props = {
     description: string;
 };
 
+import ArticleContent from '~/components/blog/ArticleContent.astro';
+import RelatedArticles from '~/components/blog/RelatedArticles.astro';
+import Tags from '~/components/blog/Tags.astro';
 import BaseLayout from '~/layouts/Base.astro';
-import Tags from '~/components/Tags.astro';
-import ArticleContent from '~/components/ArticleContent.astro';
-import RelatedArticles from '~/components/RelatedArticles.astro';
 
 const { title, titleSuffix, crumbs, date, tags, description } = Astro.props;
 ---
 
-<BaseLayout
-    smallerHeader
-    title={[title, titleSuffix]}
-    crumbs={crumbs}
-    description={description}
->
+<BaseLayout smallerHeader title={[title, titleSuffix]} crumbs={crumbs} description={description}>
     <h1>{title}</h1>
 
     <div class="meta">
@@ -33,21 +28,17 @@ const { title, titleSuffix, crumbs, date, tags, description } = Astro.props;
         <slot />
     </ArticleContent>
 
-    <RelatedArticles
-        currentTitle={title}
-        tags={tags}
-        date={date}
-    />
+    <RelatedArticles currentTitle={title} tags={tags} date={date} />
 </BaseLayout>
 
-<style scoped lang="scss">
-    .meta {
-        font-size: 0.9rem;
-        color: var(--text-dim);
+<style>
+.meta {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+}
 
-        > span:not(:last-child):after {
-            content: '•';
-            margin: 0 0.5rem;
-        }
-    }
+.meta > span:not(:last-child):after {
+    content: "•";
+    margin: 0 0.5rem;
+}
 </style>

@@ -1,0 +1,44 @@
+---
+import BaseLayout from '~/layouts/Base.astro';
+import type { ArticleEntry } from '~/lib/articles';
+import { formatDate } from '~/lib/date';
+import Routes from '~/lib/routes';
+import ArticleSummary from './ArticleSummary.astro';
+import Paging from './Paging.astro';
+
+type Props = {
+    entries: ArticleEntry[];
+    currentPage: number;
+    allPages: number;
+    tag?: {
+        slug: string;
+        name: string;
+    };
+};
+
+const { entries, currentPage, allPages, tag } = Astro.props;
+const canonical = currentPage === 1 ? (tag ? Routes.tag(tag.slug) : Routes.articles()) : '!default';
+const crumbs = tag
+    ? [{ label: 'Blog', href: Routes.articles() }, { label: `Tag: ${tag.name}` }]
+    : [{ label: 'Blog' }];
+const hrefTemplate = tag ? `/blog/tag/${tag.slug}/{i}` : '/blog/page/{i}';
+---
+
+<BaseLayout title={['Blog']} crumbs={crumbs} canonical={canonical}>
+    {entries.map(entry => (
+            <ArticleSummary
+                title={entry.data.title}
+                date={formatDate(entry.data.date)}
+                tags={entry.data.tags}
+                href={Routes.article(entry.id)}
+                description={entry.data.description}
+            />
+        ))}
+
+    <Paging
+        id={tag ? 'blog-tag' : 'blog'}
+        currentPage={currentPage}
+        allPages={allPages}
+        hrefTemplate={hrefTemplate}
+    />
+</BaseLayout>

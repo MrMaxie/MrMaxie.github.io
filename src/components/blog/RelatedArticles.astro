@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import { formatDate, toJsDate } from '~/lib/date';
+import Routes from '~/lib/routes';
+import ArticleSummary from './ArticleSummary.astro';
+
+type Props = {
+    currentTitle: string;
+    tags: string[];
+    date: string;
+};
+
+const { currentTitle, tags, date } = Astro.props;
+const allEntries = await getCollection('articles');
+const currentPostDate = toJsDate(date);
+
+const candidates = allEntries.filter(
+    entry => entry.data.title !== currentTitle && formatDate(entry.data.date) !== date,
+);
+const allDates = candidates.map(entry => toJsDate(entry.data.date).getTime());
+const minDate = Math.min(...allDates);
+const maxDate = Math.max(...allDates);
+const dateRange = maxDate - minDate || 1;
+
+const topEntries = candidates
+    .map(entry => {
+        const entryDate = toJsDate(entry.data.date).getTime();
+        const dateScore = ((entryDate - minDate) / dateRange) * 4;
+        const matchingTagsCount = entry.data.tags.filter(tag => tags.includes(tag)).length;
+        const tagScore = (matchingTagsCount / tags.length) * 5;
+        const freshnessBonus = entryDate > currentPostDate.getTime() ? 1.5 : 0;
+
+        return {
+            entry,
+            score: dateScore + tagScore + freshnessBonus,
+        };
+    })
+    .sort((left, right) => right.score - left.score)
+    .slice(0, 2)
+    .map(({ entry }) => entry);
+---
+
+{topEntries.length > 0 && (
+        <div class="related-articles">
+            <h2>Related Articles</h2>
+
+            {topEntries.map(entry => (
+                <ArticleSummary
+                    title={entry.data.title}
+                    date={formatDate(entry.data.date)}
+                    tags={entry.data.tags}
+                    href={Routes.article(entry.id)}
+                    description={entry.data.description}
+                />
+            ))}
+        </div>
+    )}
+
+<style>
+.related-articles {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.related-articles h2 {
+    font-size: 1.5rem;
+}
+</style>

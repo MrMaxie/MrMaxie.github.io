@@ -1,0 +1,32 @@
+<footer>
+    <div class="left">
+        <a href="mailto:" data-contact-link> Get in touch </a>
+    </div>
+    <div class="right">
+        <p>© <span data-cp-year>{new Date().getFullYear()}</span> Maciej (Maxie) Mieńko</p>
+    </div>
+</footer>
+
+<script>
+const copyrightYear = document.querySelector<HTMLSpanElement>('[data-cp-year]');
+const startYear = 2024;
+const currentYear = new Date().getFullYear();
+
+if (copyrightYear) {
+    copyrightYear.textContent =
+        currentYear > startYear ? `${startYear} - ${currentYear}` : startYear.toString();
+}
+</script>
+
+<style is:global>
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+footer .left a {
+    font-size: 1.1rem;
+}
+</style>

@@ -1,16 +1,11 @@
 ---
+import ArticleSummary from '~/components/blog/ArticleSummary.astro';
 import BaseLayout from '~/layouts/Base.astro';
-import ProjectsList from '~/components/sections/ProjectsList.astro';
-import { getCollection } from 'astro:content';
-import { compareDates, formatDate } from '~/utils/date';
-import ArticleSummary from '~/components/ArticleSummary.astro';
-import Routes from '~/utils/routes';
+import { getArticles } from '~/lib/articles';
+import { formatDate } from '~/lib/date';
+import Routes from '~/lib/routes';
 
-const articles = await getCollection('articles');
-
-const lastArticles = articles
-    .sort((a, b) => compareDates(b.data.date, a.data.date))
-    .slice(0, 3);
+const lastArticles = (await getArticles()).slice(0, 3);
 ---
 
 <BaseLayout>
@@ -21,16 +16,16 @@ const lastArticles = articles
             date={formatDate(article.data.date)}
             tags={article.data.tags}
             description={article.data.description}
-            href={Routes.article(article.slug)}
+            href={Routes.article(article.id)}
         />
     ))}
     <a href={Routes.articles()} class="read-more">View all articles</a>
 </BaseLayout>
 
-<style scoped lang="scss">
-    .read-more {
-        display: block;
-        text-align: center;
-        margin-top: 2rem;
-    }
+<style>
+.read-more {
+    display: block;
+    text-align: center;
+    margin-top: 2rem;
+}
 </style>

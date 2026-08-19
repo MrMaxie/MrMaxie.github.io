@@ -1,27 +1,21 @@
 ---
-import { getCollection } from 'astro:content';
-import type { GetStaticPaths } from 'astro';
-import { tagToSlug } from '~/utils/tagToSlug';
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import ArticleListing from '~/components/blog/ArticleListing.astro';
+import { getTagPages } from '~/lib/articles';
 
 export const getStaticPaths = (async () => {
-    const tags = new Set<string>();
+    const firstPages = (await getTagPages()).filter(page => page.currentPage === 1);
 
-    const articles = await getCollection('articles');
-
-    articles.forEach(article => {
-        article.data.tags.forEach(tag => {
-            tags.add(tagToSlug(tag));
-        });
-    });
-
-    return Array.from(tags).map(tag => ({
-        params: {
-            tag,
+    return firstPages.map(({ tag, tagName, ...page }) => ({
+        params: { tag },
+        props: {
+            ...page,
+            tag: { slug: tag, name: tagName },
         },
     }));
 }) satisfies GetStaticPaths;
 
-const { tag } = Astro.params;
-
-return Astro.rewrite(`/blog/tag/${tag}/1`);
+const page = Astro.props as InferGetStaticPropsType<typeof getStaticPaths>;
 ---
+
+<ArticleListing {...page} />
