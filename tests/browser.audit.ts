@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import test from 'node:test';
 import AxeBuilder from '@axe-core/playwright';
 import { chromium } from 'playwright';
+import { karlaWeightRange } from '../scripts/font-subsets.ts';
 import { auditOutput, builtRoutes, productionPreview } from './helpers/site-audit.ts';
 
 test('production accessibility, readability and discoverability audit', async t => {
@@ -79,6 +80,17 @@ test('production accessibility, readability and discoverability audit', async t 
       assert.equal(metadata.headings.length, 1, 'Expected one primary heading');
       assert.ok(metadata.headings[0]);
       assert.ok(metadata.main);
+      const unsupportedWeights = await page.evaluate(range => {
+        return [...document.querySelectorAll('main *, nav *, footer *')]
+          .filter(node =>
+            [...node.childNodes].some(child => child.nodeType === Node.TEXT_NODE && child.textContent?.trim()),
+          )
+          .map(node => getComputedStyle(node))
+          .filter(style => style.fontFamily.includes('Karla Variable'))
+          .map(style => Number.parseFloat(style.fontWeight))
+          .filter(weight => weight < range.min || weight > range.max);
+      }, karlaWeightRange);
+      assert.deepEqual(unsupportedWeights, [], `${route}: requested weight exceeds the generated font range`);
       for (const path of metadata.internalLinks) {
         assert.ok(routes.includes(path), `${route}: internal link ${path} must use a generated canonical route`);
       }
@@ -118,6 +130,31 @@ test('production accessibility, readability and discoverability audit', async t 
     assert.ok(!entries.includes('/404'), 'Error pages must not be advertised in the sitemap');
   });
   const missingRoute = '/audit-missing-page/';
+  await t.test('responsive LCP preloads fetch the displayed image once', async () => {
+    for (const width of [390, 1440]) {
+      const preloadContext = await browser.newContext({
+        viewport: { width, height: 900 },
+        deviceScaleFactor: width === 390 ? 1.75 : 1,
+      });
+      try {
+        const preloadPage = await preloadContext.newPage();
+        for (const route of ['/', '/about/', '/mods/']) {
+          await preloadPage.goto(`${baseURL}${route}`);
+          const image = preloadPage.locator(route === '/mods/' ? '.game-heading__image' : '.portrait__image').first();
+          await image.evaluate(image => (image as HTMLImageElement).decode());
+          const requests = await image.evaluate(image =>
+            performance.getEntriesByName((image as HTMLImageElement).currentSrc).map(entry => ({
+              initiator: (entry as PerformanceResourceTiming).initiatorType,
+            })),
+          );
+          assert.equal(requests.length, 1, `${route} ${width}: duplicate image download`);
+          assert.equal(requests[0].initiator, 'link', `${route} ${width}: image was not discovered by its preload`);
+        }
+      } finally {
+        await preloadContext.close();
+      }
+    }
+  });
   await t.test('llms.txt exposes current public descriptions and working canonical links', async () => {
     const response = await page.request.get(`${baseURL}/llms.txt`);
     assert.equal(response.status(), 200);

@@ -9,6 +9,7 @@ import subsetFont from 'subset-font';
 
 const families = ['outfit', 'karla', 'fira-code'];
 const require = createRequire(import.meta.url);
+export const karlaWeightRange = { min: 400, max: 700 };
 
 export function fontCharacters(sources: string[]): string {
   const text = decodeHTML(sources.join('\n'))
@@ -43,10 +44,16 @@ export default function fontSubsets(): AstroIntegration {
             const subset = await subsetFont(original, text, {
               targetFormat: 'woff2',
               preserveNameIds: [0, 7, 8, 9, 13, 14],
+              variationAxes: family === 'karla' ? { wght: karlaWeightRange } : undefined,
             });
             await writeFile(join(directory, path), subset);
           }
-          await writeFile(join(directory, 'index.css'), css);
+          await writeFile(
+            join(directory, 'index.css'),
+            family === 'karla'
+              ? css.replace(/font-weight: \d+ \d+;/g, `font-weight: ${karlaWeightRange.min} ${karlaWeightRange.max};`)
+              : css,
+          );
           aliases.push(
             { find: new RegExp(`^@fontsource-variable/${family}$`), replacement: join(directory, 'index.css') },
             { find: new RegExp(`^@fontsource-variable/${family}/files/`), replacement: `${join(directory, 'files')}/` },

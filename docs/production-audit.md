@@ -71,6 +71,10 @@ Production builds now subset the installed fonts using the site's source charact
 
 The three Latin files fell from approximately 100 KB to 70 KB. The Outfit and Karla extended files fell from approximately 30 KB together to 2.7 KB. A comparison of the homepage and mod list at 390/1440 px found identical pixels and geometry before and after subsetting. The build, inline-CSS budget and 55 unit/contract tests pass. These byte and visual checks do not by themselves establish a 100-point Lighthouse result; the repeated CI audit remains authoritative for its runner.
 
+The next step limits Karla to its used 400-700 weight range, reducing its Latin file from 21.4 KB to 14.9 KB. A browser assertion rejects requested Karla weights outside that generated range. The comparison retained layout and line wrapping, with only font rasterization differences in at most 0.012% of sampled color channels. Outfit and Fira Code retain their original weight ranges.
+
+Responsive image preloads now expose the portrait and first game banner in the document head, using the same image variants and size definitions as the displayed images. Browser tests verify that the selected image is fetched by its preload exactly once on mobile and desktop, including a mobile pixel ratio of 1.75. These changes preserve image quality, composition and page animations.
+
 ## References
 
 - [Permissions-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Permissions-Policy)
