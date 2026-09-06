@@ -11,6 +11,7 @@ export default defineConfig({
   site: 'https://maxie.dev/',
   integrations: [icon({ iconDir: 'src/assets/icons' }), sitemap(), playformCompress({ CSS: false })],
   output: 'static',
+  trailingSlash: 'always',
   compressHTML: true,
   markdown: { processor: satteri({ features: { smartPunctuation: false } }) },
   fonts: [

@@ -41,6 +41,10 @@ test('production accessibility, readability and discoverability audit', async t 
         robots: document.querySelector('meta[name="robots"]')?.getAttribute('content') ?? '',
         headings: [...document.querySelectorAll('h1')].map(node => node.textContent?.trim()),
         main: document.querySelector('main')?.textContent?.trim(),
+        internalLinks: [...document.querySelectorAll<HTMLAnchorElement>('a[href]')]
+          .map(link => new URL(link.href))
+          .filter(url => url.origin === location.origin)
+          .map(url => url.pathname),
         externalLinks: [...document.querySelectorAll<HTMLAnchorElement>('a[href^="https://"]')].map(link => ({
           href: link.href,
           target: link.target,
@@ -75,6 +79,9 @@ test('production accessibility, readability and discoverability audit', async t 
       assert.equal(metadata.headings.length, 1, 'Expected one primary heading');
       assert.ok(metadata.headings[0]);
       assert.ok(metadata.main);
+      for (const path of metadata.internalLinks) {
+        assert.ok(routes.includes(path), `${route}: internal link ${path} must use a generated canonical route`);
+      }
       for (const link of metadata.externalLinks) {
         assert.equal(link.target, '_blank', link.href);
         assert.ok(link.rel.split(' ').includes('noopener'), link.href);
@@ -111,11 +118,85 @@ test('production accessibility, readability and discoverability audit', async t 
     assert.ok(!entries.includes('/404'), 'Error pages must not be advertised in the sitemap');
   });
   const missingRoute = '/audit-missing-page/';
+  await t.test('responsive LCP preloads fetch the displayed image once', async () => {
+    for (const width of [390, 1440]) {
+      const preloadContext = await browser.newContext({
+        viewport: { width, height: 900 },
+        deviceScaleFactor: width === 390 ? 1.75 : 1,
+      });
+      try {
+        const preloadPage = await preloadContext.newPage();
+        for (const route of ['/', '/about/', '/mods/']) {
+          await preloadPage.goto(`${baseURL}${route}`);
+          const image = preloadPage.locator(route === '/mods/' ? '.game-heading__image' : '.portrait__image').first();
+          await image.evaluate(image => (image as HTMLImageElement).decode());
+          const requests = await image.evaluate(image =>
+            performance.getEntriesByName((image as HTMLImageElement).currentSrc).map(entry => ({
+              initiator: (entry as PerformanceResourceTiming).initiatorType,
+            })),
+          );
+          assert.equal(requests.length, 1, `${route} ${width}: duplicate image download`);
+          assert.equal(requests[0].initiator, 'link', `${route} ${width}: image was not discovered by its preload`);
+        }
+      } finally {
+        await preloadContext.close();
+      }
+    }
+  });
+  await t.test('llms.txt exposes current public descriptions and working canonical links', async () => {
+    const response = await page.request.get(`${baseURL}/llms.txt`);
+    assert.equal(response.status(), 200);
+    assert.match(response.headers()['content-type'], /text\/plain/);
+    const content = await response.text();
+    assert.match(content, /^# Maciej Mieńko\n\n> /);
+    assert.ok(content.includes('## Projects\n'));
+    assert.ok(content.includes('## Game mods\n'));
+    const links = [...content.matchAll(/^- \[.+\]\((https:\/\/[^)]+)\): .+$/gm)];
+    assert.ok(links.length > 3);
+    for (const [, href] of links) {
+      const url = new URL(href);
+      if (url.origin !== 'https://maxie.dev') continue;
+      assert.ok(routes.includes(url.pathname), href);
+      const destination = await page.request.get(`${baseURL}${url.pathname}`, { maxRedirects: 0 });
+      assert.equal(destination.status(), 200, href);
+    }
+    await page.goto(baseURL);
+    assert.equal(await page.locator('link[rel="describedby"]').getAttribute('href'), '/llms.txt');
+  });
   await t.test('missing pages return a useful 404 without a misleading canonical URL', async () => {
     assert.equal((await page.goto(`${baseURL}${missingRoute}`))?.status(), 404);
     assert.equal(await page.locator('h1').textContent(), 'That page is not here.');
     assert.equal(await page.getByRole('link', { name: 'Go home', exact: true }).getAttribute('href'), '/');
     assert.equal(await page.locator('link[rel="canonical"]').count(), 0);
+    assert.equal(await page.locator('meta[property="og:url"]').count(), 0);
+  });
+  await t.test('first game banner is discoverable without lazy loading', async () => {
+    await page.goto(`${baseURL}/mods/`);
+    const banner = page.locator('.game-heading__image').first();
+    assert.equal(await banner.getAttribute('loading'), 'eager');
+    assert.equal(await banner.getAttribute('fetchpriority'), 'high');
+    assert.equal(await page.locator('picture source[type="image/avif"]').count(), 3);
+    assert.equal(
+      await banner.evaluate(image => getComputedStyle(image.parentElement as HTMLElement).position),
+      'absolute',
+    );
+    assert.ok(
+      await page
+        .locator('.game-heading')
+        .first()
+        .evaluate(header => {
+          const title = header.querySelector('h2');
+          if (!title) return false;
+          return (
+            Math.abs(
+              title.getBoundingClientRect().left -
+                header.getBoundingClientRect().left -
+                Number.parseFloat(getComputedStyle(header).paddingLeft),
+            ) < 1
+          );
+        }),
+      'The image wrapper must not displace the game title',
+    );
   });
   await context.close();
 
@@ -234,7 +315,10 @@ test('production accessibility, readability and discoverability audit', async t 
             () =>
               (
                 window as typeof window & {
-                  auditAnimations: Array<{ frames: Record<string, unknown>; options: { duration: number } }>;
+                  auditAnimations: Array<{
+                    frames: Record<string, unknown>;
+                    options: { duration: number; delay?: number; easing?: string; fill?: string };
+                  }>;
                 }
               ).auditAnimations,
           );
@@ -244,19 +328,45 @@ test('production accessibility, readability and discoverability audit', async t 
           );
           assert.ok(
             (await calls()).some(
-              call => JSON.stringify(call.frames).includes('translateY(9px)') && call.options.duration === 620,
+              call =>
+                JSON.stringify(call.frames).includes('translateY(9px)') &&
+                call.options.duration === 620 &&
+                call.options.easing === 'cubic-bezier(0.16, 1, 0.3, 1)',
             ),
+          );
+          assert.ok(
+            (await calls()).some(
+              call =>
+                JSON.stringify(call.frames).includes('translateY(8px)') &&
+                call.options.duration === 720 &&
+                call.options.delay === 80 &&
+                call.options.fill === 'both',
+            ),
+            'Portrait reveal must preserve its delay and starting position',
           );
         } else assert.deepEqual(await calls(), []);
         await motionPage
           .getByRole('navigation', { name: 'Primary navigation' })
           .getByRole('link', { name: 'Projects', exact: true })
           .click();
-        await motionPage.waitForURL('**/projects');
+        await motionPage.waitForURL('**/projects/');
+        if (reducedMotion === 'no-preference') {
+          await motionPage.waitForFunction(() =>
+            (
+              window as typeof window & { auditAnimations: Array<{ options: { duration: number } }> }
+            ).auditAnimations.some(call => call.options.duration === 640),
+          );
+        }
         await motionPage.evaluate(() => {
           location.hash = '#contact';
         });
         await motionPage.waitForFunction(() => document.activeElement?.id === 'contact');
+        await motionPage.waitForFunction(() => {
+          const nav = document.querySelector<HTMLElement>('[data-site-nav]');
+          const range = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+          const expected = range > 0 ? window.scrollY / range : 0;
+          return nav && Math.abs(Number(nav.style.getPropertyValue('--scroll-progress')) - expected) < 0.001;
+        });
         assert.equal(await motionPage.locator('#contact').isVisible(), true);
         const contactBounds = await motionPage.locator('#contact').boundingBox();
         const navBounds = await motionPage.getByRole('navigation', { name: 'Primary navigation' }).boundingBox();
@@ -274,11 +384,16 @@ test('production accessibility, readability and discoverability audit', async t 
   }
 
   for (const theme of ['dark', 'light']) {
-    for (const width of [320, 1440]) {
+    for (const width of [320, 390, 1440]) {
       const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
       context.setDefaultTimeout(10000);
       await context.addInitScript(theme => localStorage.setItem('maxie-theme', theme), theme);
       const page = await context.newPage();
+      const runtimeErrors: string[] = [];
+      page.on('pageerror', error => runtimeErrors.push(error.message));
+      page.on('console', message => {
+        if (message.type() === 'error' || /Permissions-Policy/.test(message.text())) runtimeErrors.push(message.text());
+      });
       await t.test(`card surfaces preserve links and tooltip controls: ${theme} ${width}px`, async () => {
         for (const route of ['/', '/projects/', '/mods/']) {
           await page.goto(`${baseURL}${route}`);
@@ -321,12 +436,29 @@ test('production accessibility, readability and discoverability audit', async t 
       });
       for (const route of [...routes, missingRoute]) {
         await t.test(`axe and reflow: ${route} ${theme} ${width}px`, async () => {
+          runtimeErrors.length = 0;
           assert.equal((await page.goto(`${baseURL}${route}`))?.status(), route === missingRoute ? 404 : 200);
           await page.evaluate(() => document.fonts.ready);
           await page.locator('main').waitFor();
+          const undersizedCardControls = await page
+            .locator('[data-project-card] a:not(.project-resource-card__link), [data-project-card] button')
+            .evaluateAll(nodes =>
+              nodes.flatMap(node => {
+                const bounds = node.getBoundingClientRect();
+                return bounds.width > 0 && bounds.height > 0 && (bounds.width < 24 || bounds.height < 24)
+                  ? [{ text: node.textContent?.trim(), width: bounds.width, height: bounds.height }]
+                  : [];
+              }),
+            );
+          assert.deepEqual(
+            undersizedCardControls,
+            [],
+            'Controls over a stretched card link cannot use the spacing exception',
+          );
           const scan = await new AxeBuilder({ page })
             .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'])
             .analyze();
+          if (route !== missingRoute) assert.deepEqual(runtimeErrors, [], `${route}: browser console must be clean`);
           const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
           await page.addStyleTag({
             content:
@@ -407,7 +539,7 @@ test('production accessibility, readability and discoverability audit', async t 
           .getByRole('navigation', { name: 'Primary navigation' })
           .getByRole('link', { name: 'Projects', exact: true })
           .click();
-        await page.waitForURL('**/projects');
+        await page.waitForURL('**/projects/');
         assert.equal(await page.locator('html').getAttribute('data-theme'), next);
         await page.getByRole('button', { name: `Switch to ${theme} theme` }).waitFor();
         const tooltipTrigger = page.locator('button[aria-describedby]').first();

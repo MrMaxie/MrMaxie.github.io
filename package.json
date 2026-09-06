@@ -14,8 +14,7 @@
     "@playform/compress": "0.2.5",
     "astro": "7.2.3",
     "astro-icon": "1.2.0",
-    "embla-carousel": "8.6.0",
-    "motion": "13.2.0"
+    "embla-carousel": "8.6.0"
   },
   "devEngines": {
     "packageManager": {

@@ -1,8 +1,6 @@
-import { animate } from 'motion/mini';
-
 import { prefersReducedMotion, registerPageSetup } from './page-lifecycle';
 
-let highlight: ReturnType<typeof animate> | undefined;
+let highlight: Animation | undefined;
 
 const revealContact = () => {
   if (window.location.hash !== '#contact') return;
@@ -16,13 +14,12 @@ const revealContact = () => {
   if (prefersReducedMotion()) return;
 
   const accent = getComputedStyle(contact).getPropertyValue('--accent-secondary').trim();
-  highlight = animate(
-    contact,
+  highlight = contact.animate(
     {
       backgroundColor: [`color-mix(in srgb, ${accent} 12%, transparent)`, 'transparent'],
       boxShadow: [`0 0 0 2px ${accent}`, '0 0 0 2px transparent'],
     },
-    { duration: 1.6, ease: 'easeOut' },
+    { duration: 1600, easing: 'ease-out' },
   );
 };
 

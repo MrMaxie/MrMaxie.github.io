@@ -10,17 +10,20 @@ import ContactPanel from '~/components/site/ContactPanel.astro';
 import Footer from '~/components/site/Footer.astro';
 import Header from '~/components/site/Header.astro';
 import Nav from '~/components/site/Nav.astro';
+import Portrait from '~/components/site/Portrait.astro';
 import { serializeStructuredData, siteStructuredData } from '~/lib/structured-data';
 
 interface Props {
   title?: string[];
   smallerHeader?: boolean;
+  preloadPortrait?: boolean;
   description?: string;
   crumbs?: ComponentProps<typeof Breadcrumbs>['crumbs'];
   canonical?: string | '!default' | '!remove';
 }
 
 const { title = [], crumbs, description, smallerHeader = false, canonical = '!default' } = Astro.props;
+const { preloadPortrait = !smallerHeader } = Astro.props;
 
 let canonicalUrl: string | false = false;
 
@@ -52,10 +55,13 @@ const socialImageAlt = 'Maciej Mieńko, software developer, with his portrait, m
     <meta charset="UTF-8">
     <meta name="description" content={pageDescription}>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    {preloadPortrait && <Portrait preload />}
+    <slot name="head" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16">
     <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
     <link rel="sitemap" href="/sitemap-index.xml">
+    <link rel="describedby" href="/llms.txt" type="text/plain">
     {canonicalUrl ? <link rel="canonical" href={canonicalUrl} /> : null}
     <title>{pageTitle}</title>
     {canonicalUrl && <>

@@ -19,7 +19,7 @@ const accessLabels = {
 ---
 
 <div
-  class="resource-metadata relative z-4 mt-1 flex min-h-4 flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs leading-normal text-text-muted pointer-events-none **:data-tooltip:pointer-events-auto"
+  class="resource-metadata relative z-4 mt-1 flex min-h-6 flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs leading-normal text-text-muted pointer-events-none **:data-tooltip:pointer-events-auto"
 >
   {access && <Tooltip text={accessLabels[access].description}><Icon name="tabler:lock" class="size-3" aria-hidden="true" />{accessLabels[access].label}</Tooltip>}
   {version && <Tooltip text={`Version ${version}`}><Icon name="tabler:tag" class="size-3" aria-hidden="true" /><span class="sr-only">Version </span>{version}</Tooltip>}

@@ -50,7 +50,7 @@ const isRow = variant === 'row' || variant === 'featured';
   <div class="mb-5 flex min-h-15 items-center gap-4">
     <ProjectMark project={resource} showFallback />
     <div class="min-w-0 flex-1">
-      {eyebrow && <a class="relative z-4 mb-1 block w-fit font-mono text-xs text-text-muted" href={eyebrow.href}>{eyebrow.label}</a>}
+      {eyebrow && <a class="relative z-4 mb-1 flex min-h-6 w-fit items-center font-mono text-xs text-text-muted" href={eyebrow.href}>{eyebrow.label}</a>}
       <Heading class:list={['text-2xl leading-tight tracking-tight', { truncate: variant === 'featured' }]}
         ><a class="project-resource-card__link text-inherit no-underline focus-visible:outline-none" href={href}
           >{resource.name}</a

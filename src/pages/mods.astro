@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { getImage, Picture } from 'astro:assets';
 import ModCard from '~/components/mods/ModCard.astro';
 import CatalogHeader from '~/components/ui/CatalogHeader.astro';
 import Section from '~/components/ui/Section.astro';
@@ -9,13 +9,15 @@ import Routes from '~/lib/routes';
 import { cssVariables } from '~/lib/styles';
 
 const groups = await getModGroups();
+const bannerWidths = [320, 460];
+const bannerSizes = '(min-width: 77rem) 49.33rem, 66vw';
+const firstBanner = groups[0]
+  ? await getImage({ src: groups[0].image, format: 'avif', widths: bannerWidths, sizes: bannerSizes })
+  : undefined;
 ---
 
-<BaseLayout
-  smallerHeader
-  title={['Mods']}
-  description="Game mods by Maciej Mieńko for Terraria, The Binding of Isaac, and Hogwarts Legacy."
->
+<BaseLayout smallerHeader title={['Mods']} description="Game mods by Maciej Mieńko.">
+  {firstBanner && <link slot="head" rel="preload" as="image" type="image/avif" imagesrcset={firstBanner.srcSet.attribute} imagesizes={bannerSizes} fetchpriority="high" />}
   <div class="mods-page">
     <CatalogHeader
       title="Mods"
@@ -24,10 +26,10 @@ const groups = await getModGroups();
       actions={[{ href: Routes.topics(), label: 'Browse all topics' }]}
     />
     <div class="mt-6 flex flex-col gap-8">
-      {groups.map(group => <section id={group.id} class="scroll-mt-24" aria-labelledby={`game-${group.id}`} style={cssVariables({ '--mod-color': group.color })}>
+      {groups.map((group, index) => <section id={group.id} class="scroll-mt-24" aria-labelledby={`game-${group.id}`} style={cssVariables({ '--mod-color': group.color })}>
         <Section data-page-reveal>
           <header class="game-heading relative isolate flex min-h-24 items-center justify-between gap-6 overflow-hidden p-6">
-            <Image class="game-heading__image pointer-events-none absolute inset-y-0 right-0 -z-1 h-full w-2/3 object-cover" src={group.image} alt="" widths={[640, 960]} sizes="66vw" />
+            <Picture pictureAttributes={{ class: 'pointer-events-none absolute inset-0 -z-1' }} class="game-heading__image absolute inset-y-0 right-0 h-full w-2/3 object-cover" src={group.image} formats={['avif', 'webp']} alt="" widths={bannerWidths} sizes={bannerSizes} loading={index === 0 ? 'eager' : 'lazy'} fetchpriority={index === 0 ? 'high' : 'auto'} />
             <h2 class="text-2xl leading-tight" id={`game-${group.id}`}>{group.name}</h2>
             <span class="relative flex-none font-mono text-sm text-text-muted">{group.mods.length} {group.mods.length === 1 ? 'mod' : 'mods'}</span>
           </header>

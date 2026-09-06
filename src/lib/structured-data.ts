@@ -2,11 +2,37 @@ type Crumb = { label: string; href?: string };
 
 export function siteStructuredData(site: string, canonical: string, crumbs: Crumb[] = []) {
   const person = `${site}#person`;
+  const profile = new URL('/about/', site).href;
   return {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'Person', '@id': person, name: 'Maciej Mieńko', url: new URL('/about/', site).href },
-      { '@type': 'WebSite', '@id': `${site}#website`, name: 'Maciej Mieńko', url: site, author: { '@id': person } },
+      {
+        '@type': 'Person',
+        '@id': person,
+        name: 'Maciej Mieńko',
+        alternateName: ['Maxie', 'MrMaxie'],
+        url: profile,
+        sameAs: ['https://github.com/MrMaxie', 'https://www.linkedin.com/in/maciej-mie%C5%84ko-b0200b190/'],
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${site}#website`,
+        name: 'Maciej Mieńko',
+        alternateName: new URL(site).hostname,
+        url: site,
+        author: { '@id': person },
+      },
+      ...(canonical === profile
+        ? [
+            {
+              '@type': 'ProfilePage',
+              '@id': `${profile}#profile`,
+              url: profile,
+              mainEntity: { '@id': person },
+              isPartOf: { '@id': `${site}#website` },
+            },
+          ]
+        : []),
       ...(crumbs.length
         ? [
             {

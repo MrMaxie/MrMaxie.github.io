@@ -50,6 +50,6 @@ test('marks the current primary destination in production pages', () => {
     const currentLinks = [...nav.matchAll(/<a\b[^>]*aria-current=(?:"page"|page)[\s>][^>]*>/g)];
     assert.equal(currentLinks.length, 1, `${route || '/'} must have one active primary link`);
     const href = currentLinks[0][0].match(/\bhref=(?:"([^"]+)"|([^\s>]+))/);
-    assert.equal(href?.[1] ?? href?.[2], `/${route}`);
+    assert.equal(href?.[1] ?? href?.[2], route ? `/${route}/` : '/');
   }
 });
