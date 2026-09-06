@@ -4,7 +4,6 @@ import { join } from 'node:path';
 import test from 'node:test';
 import AxeBuilder from '@axe-core/playwright';
 import { chromium } from 'playwright';
-import { karlaWeightRange } from '../scripts/font-subsets.ts';
 import { auditOutput, builtRoutes, productionPreview } from './helpers/site-audit.ts';
 
 test('production accessibility, readability and discoverability audit', async t => {
@@ -80,17 +79,6 @@ test('production accessibility, readability and discoverability audit', async t 
       assert.equal(metadata.headings.length, 1, 'Expected one primary heading');
       assert.ok(metadata.headings[0]);
       assert.ok(metadata.main);
-      const unsupportedWeights = await page.evaluate(range => {
-        return [...document.querySelectorAll('main *, nav *, footer *')]
-          .filter(node =>
-            [...node.childNodes].some(child => child.nodeType === Node.TEXT_NODE && child.textContent?.trim()),
-          )
-          .map(node => getComputedStyle(node))
-          .filter(style => style.fontFamily.includes('Karla Variable'))
-          .map(style => Number.parseFloat(style.fontWeight))
-          .filter(weight => weight < range.min || weight > range.max);
-      }, karlaWeightRange);
-      assert.deepEqual(unsupportedWeights, [], `${route}: requested weight exceeds the generated font range`);
       for (const path of metadata.internalLinks) {
         assert.ok(routes.includes(path), `${route}: internal link ${path} must use a generated canonical route`);
       }

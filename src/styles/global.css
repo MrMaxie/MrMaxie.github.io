@@ -12,12 +12,6 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-:root {
-  --font-outfit: "Outfit Variable", "Outfit Fallback", sans-serif;
-  --font-karla: "Karla Variable", "Karla Fallback", sans-serif;
-  --font-fira-code: "Fira Code Variable", monospace;
-}
-
 /* Latin metrics from the installed WOFF2 files, matched to Arial.
    The extended subset's average width overestimates English text.
    Round Outfit's width down to avoid a fractional-pixel heading wrap. */

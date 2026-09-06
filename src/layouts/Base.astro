@@ -1,13 +1,8 @@
 ---
+import { Font } from 'astro:assets';
 import { ClientRouter, fade } from 'astro:transitions';
-import firaLatin from '@fontsource-variable/fira-code/files/fira-code-latin-wght-normal.woff2?url';
-import karlaLatin from '@fontsource-variable/karla/files/karla-latin-wght-normal.woff2?url';
-import outfitLatin from '@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url';
 import type { ComponentProps } from 'astro/types';
 
-import '@fontsource-variable/outfit';
-import '@fontsource-variable/karla';
-import '@fontsource-variable/fira-code';
 import '~/styles/global.css';
 
 import Breadcrumbs from '~/components/site/Breadcrumbs.astro';
@@ -87,9 +82,9 @@ const socialImageAlt = 'Maciej Mieńko, software developer, with his portrait, m
       <meta name="twitter:image:alt" content={socialImageAlt} />
     </>}
     {canonicalUrl && <script type="application/ld+json" set:html={serializeStructuredData(siteStructuredData(String(Astro.site), canonicalUrl, breadcrumbs))} />}
-    <link rel="preload" href={outfitLatin} as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href={karlaLatin} as="font" type="font/woff2" crossorigin>
-    {smallerHeader && <link rel="preload" href={firaLatin} as="font" type="font/woff2" crossorigin />}
+    <Font cssVariable="--font-outfit" preload />
+    <Font cssVariable="--font-karla" preload />
+    <Font cssVariable="--font-fira-code" preload={smallerHeader ? [{ subset: 'latin' }] : false} />
     <script is:inline>
     (() => {
       const storageKey = 'maxie-theme';
