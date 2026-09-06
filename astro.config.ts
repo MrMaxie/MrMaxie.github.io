@@ -21,6 +21,9 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
-    build: { assetsInlineLimit: file => (file.endsWith('.woff2') ? false : undefined) },
+    build: {
+      assetsInlineLimit: file =>
+        file.endsWith('.woff2') ? /(?:outfit|karla)-latin-ext-wght-normal\.woff2$/.test(file) : undefined,
+    },
   },
 });

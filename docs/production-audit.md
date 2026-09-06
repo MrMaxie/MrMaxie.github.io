@@ -75,6 +75,10 @@ The next step limits Karla to its used 400-700 weight range, reducing its Latin 
 
 Responsive image preloads now expose the portrait and first game banner in the document head, using the same image variants and size definitions as the displayed images. Browser tests verify that the selected image is fetched by its preload exactly once on mobile and desktop, including a mobile pixel ratio of 1.75. These changes preserve image quality, composition and page animations.
 
+The subsequent [CI run](https://github.com/MrMaxie/MrMaxie.github.io/actions/runs/34056498117) passed the build, 55 unit tests and 376 browser tests. Of 30 Lighthouse measurements, 25 scored 100 in every category; five mobile measurements scored 99 for performance. Mobile results were home 99/100/100, projects 100/100/100, mods 99/99/99, project detail 100/100/100 and mod detail 100/100/99. Every CLS measurement was zero. The strict gate correctly failed and retained all reports.
+
+The two small Outfit/Karla alphabet extensions are now embedded in the existing CSS, eliminating their late font requests. The larger Latin files remain separately cached. A three-run local mobile diagnostic retained a performance score of 98 for the mod list; its first run reduced FCP from 1.59 s to 1.44 s while LCP remained 2.18 s. Inline CSS stayed within the unchanged 15,288-byte gzip budget. This is a measured loading improvement, not a claim that the remaining 100-point gate is satisfied.
+
 ## References
 
 - [Permissions-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Permissions-Policy)

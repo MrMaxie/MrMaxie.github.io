@@ -21,5 +21,11 @@ test('preloads the actual critical Latin font URLs without unrelated subsets', (
       const url = face.match(/url\(["']?([^"')]+)["']?\)/)?.[1];
       assert.ok(url && preloads.includes(url), `Missing preload for ${family}`);
     }
+    for (const family of ['Outfit Variable', 'Karla Variable']) {
+      const face = html.match(/@font-face\{[^}]+\}/g)?.find(css => css.includes(family) && css.includes('base64,'));
+      const encoded = face?.match(/base64,([\w+/=]+)/)?.[1];
+      assert.ok(encoded, `Missing embedded alphabet extension for ${family}`);
+      assert.equal(Buffer.from(encoded, 'base64').subarray(0, 4).toString(), 'wOF2');
+    }
   }
 });
