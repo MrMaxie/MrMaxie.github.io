@@ -1,9 +1,6 @@
-import { inView } from 'motion';
-import { animate } from 'motion/mini';
-
 import { registerPageMotion } from './page-lifecycle';
 
-const revealEase = [0.16, 1, 0.3, 1] as [number, number, number, number];
+const revealEase = 'cubic-bezier(0.16, 1, 0.3, 1)';
 
 let hadHeroBeforeSwap = false;
 document.addEventListener('astro:before-swap', () => {
@@ -17,35 +14,37 @@ type RevealOptions = {
 };
 
 registerPageMotion(() => {
-  const animations = new Set<ReturnType<typeof animate>>();
-  const observers: Array<() => void> = [];
+  const animations = new Set<Animation>();
+  const observers: IntersectionObserver[] = [];
 
   const play = (target: HTMLElement, distance: number, duration: number, delay = 0) => {
-    const animation = animate(
-      target,
+    const animation = target.animate(
       { transform: [`translateY(${distance}px)`, 'translateY(0px)'] },
-      { delay, duration, ease: revealEase },
+      { delay: delay * 1000, duration: duration * 1000, easing: revealEase, fill: 'both' },
     );
     animations.add(animation);
-    animation.then(
+    animation.finished.then(
       () => {
         animations.delete(animation);
-        target.style.removeProperty('transform');
+        animation.cancel();
       },
       () => animations.delete(animation),
     );
   };
 
   const observe = (selector: string, options: RevealOptions) => {
-    observers.push(
-      inView(
-        selector,
-        target => {
-          play(target as HTMLElement, options.distance, options.duration);
-        },
-        { margin: options.margin },
-      ),
+    const observer = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          play(entry.target as HTMLElement, options.distance, options.duration);
+          observer.unobserve(entry.target);
+        }
+      },
+      { rootMargin: options.margin },
     );
+    for (const target of document.querySelectorAll(selector)) observer.observe(target);
+    observers.push(observer);
   };
 
   const home = document.querySelector<HTMLElement>('[data-home-page]');
@@ -67,7 +66,7 @@ registerPageMotion(() => {
   }
 
   return () => {
-    for (const stop of observers) stop();
+    for (const observer of observers) observer.disconnect();
     for (const animation of animations) animation.cancel();
     animations.clear();
   };

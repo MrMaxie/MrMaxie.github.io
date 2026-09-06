@@ -1,5 +1,5 @@
 const safeJoin = (...parts: Array<string | number | undefined>) =>
-  ['/', ...parts]
+  ['/', ...parts, '/']
     .filter(part => part !== undefined && part !== '')
     .join('/')
     .replace(/\/{2,}/g, '/');

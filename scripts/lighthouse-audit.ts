@@ -20,11 +20,15 @@ async function availablePort(): Promise<number> {
 }
 
 const output = await auditOutput('lighthouse');
-const { server, baseURL } = await productionPreview();
+const target = process.argv[2];
+if (target && !/^https?:\/\//.test(target)) throw new Error('Expected an HTTP(S) site URL');
+const preview = target ? undefined : await productionPreview();
+const baseURL = target ? new URL(target).origin : preview?.baseURL;
+if (!baseURL) throw new Error('No audit target available');
 const summary: unknown[] = [];
 const failures: string[] = [];
 try {
-  for (const route of ['/', '/projects/maxiedev-events/', '/mods/boss-scaler/']) {
+  for (const route of ['/', '/projects/', '/mods/', '/projects/maxiedev-events/', '/mods/boss-scaler/']) {
     for (const profile of ['mobile', 'desktop']) {
       for (let run = 1; run <= 3; run++) {
         const path = join(output, `${route.replaceAll('/', '_')}-${profile}-${run}`);
@@ -72,6 +76,6 @@ try {
   }
   if (failures.length) throw new Error(`Lighthouse quality gates failed:\n${failures.join('\n')}`);
 } finally {
-  await server.stop();
+  await preview?.server.stop();
   console.log(`Lighthouse reports: ${output}`);
 }

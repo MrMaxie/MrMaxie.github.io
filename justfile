@@ -40,6 +40,10 @@ audit-browser: build
 audit-lighthouse: build
   nub --experimental-strip-types scripts/lighthouse-audit.ts
 
+# Audit hosting, cache headers and delivered assets using the same quality gates.
+audit-lighthouse-live url="https://maxie.dev":
+  nub --experimental-strip-types scripts/lighthouse-audit.ts {{ url }}
+
 ci:
   just check
   nub exec astro check

@@ -6,7 +6,7 @@ type LighthouseMetrics = {
 export function lighthouseFailures(report: LighthouseMetrics): string[] {
   const failures: string[] = [];
   for (const [category, minimum] of Object.entries({
-    performance: 0.95,
+    performance: 1,
     accessibility: 1,
     'best-practices': 1,
     seo: 1,

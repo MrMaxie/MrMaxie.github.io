@@ -4,7 +4,7 @@ import { lighthouseFailures } from './helpers/audit-thresholds.ts';
 
 const passing = () => ({
   categories: {
-    performance: { score: 0.95 },
+    performance: { score: 1 },
     accessibility: { score: 1 },
     'best-practices': { score: 1 },
     seo: { score: 1 },
