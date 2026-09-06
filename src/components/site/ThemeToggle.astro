@@ -1,0 +1,87 @@
+---
+import { Icon } from 'astro-icon/components';
+---
+
+<button
+  class="inline-grid size-10 cursor-pointer place-items-center border border-line bg-transparent p-0 text-text-muted hover:-translate-y-0.5 hover:bg-surface-strong hover:text-text active:translate-y-px active:scale-pressed"
+  type="button"
+  data-theme-toggle
+  aria-label="Switch to dark theme"
+>
+  <Icon class="size-4.5 stroke-icon dark:hidden" name="tabler:moon" aria-hidden="true" />
+  <Icon class="hidden size-4.5 stroke-icon dark:block" name="tabler:sun" aria-hidden="true" />
+</button>
+
+<script>
+import type { TransitionBeforeSwapEvent } from 'astro:transitions/client';
+
+const storageKey = 'maxie-theme';
+type Theme = 'light' | 'dark';
+
+const getTheme = () => (document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
+const getSavedTheme = () => {
+  try {
+    return localStorage.getItem(storageKey);
+  } catch {
+    return null;
+  }
+};
+
+const isTheme = (value: string | null): value is Theme => value === 'light' || value === 'dark';
+
+const setTheme = (theme: Theme, persist = false) => {
+  document.documentElement.dataset.theme = theme;
+
+  if (persist) {
+    try {
+      localStorage.setItem(storageKey, theme);
+    } catch {
+      // The selected theme still applies for the current page if storage is unavailable.
+    }
+  }
+};
+
+const restoreSavedTheme = () => {
+  const savedTheme = getSavedTheme();
+
+  if (isTheme(savedTheme)) setTheme(savedTheme);
+};
+
+const updateToggle = () => {
+  const toggle = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+
+  if (!toggle) return;
+
+  const nextTheme = getTheme() === 'dark' ? 'light' : 'dark';
+  toggle.ariaLabel = `Switch to ${nextTheme} theme`;
+
+  if (toggle.dataset.bound !== 'true') {
+    toggle.dataset.bound = 'true';
+    toggle.addEventListener('click', () => {
+      setTheme(getTheme() === 'dark' ? 'light' : 'dark', true);
+      updateToggle();
+    });
+  }
+};
+
+window.addEventListener('storage', event => {
+  if (event.key !== storageKey || !isTheme(event.newValue)) return;
+
+  setTheme(event.newValue);
+  updateToggle();
+});
+
+window.addEventListener('pageshow', () => {
+  restoreSavedTheme();
+  updateToggle();
+});
+document.addEventListener('astro:page-load', () => {
+  restoreSavedTheme();
+  updateToggle();
+});
+document.addEventListener('astro:before-swap', event => {
+  const transition = event as TransitionBeforeSwapEvent;
+  transition.newDocument.documentElement.dataset.theme = getTheme();
+});
+updateToggle();
+</script>

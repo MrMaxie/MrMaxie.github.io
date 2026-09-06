@@ -1,47 +1,25 @@
 ---
 interface Props {
-    crumbs: Array<{
-        label: string;
-        href?: string;
-    }>;
+  crumbs: Array<{
+    label: string;
+    href?: string;
+  }>;
 }
 
 const { crumbs = [] } = Astro.props;
 ---
 
-<div class="breadcrumbs" transition:name="breadcrumbs">
-    {crumbs.map(({ label, href }) =>
-            href ? (
-                <a class="crumb" href={href}>
-                    {label}
-                </a>
-            ) : (
-                <span class="crumb">{label}</span>
-            ),
-        )}
+<div class="breadcrumbs -mb-4 text-sm text-text-muted" transition:name="breadcrumbs">
+  {crumbs.map(({ label, href }) =>
+    href ? (
+      <a
+        class="text-text-muted no-underline after:mx-2 after:content-['/'] last:after:content-none hover:text-accent-hover"
+        href={href}
+      >
+        {label}
+      </a>
+    ) : (
+      <span class="after:mx-2 after:content-['/'] last:after:content-none">{label}</span>
+    ),
+  )}
 </div>
-
-<style>
-.breadcrumbs {
-    font-size: 0.9rem;
-}
-
-.breadcrumbs .crumb:last-child:after {
-    content: none;
-}
-
-.breadcrumbs .crumb:after {
-    content: "›";
-    margin: 0 0.5rem;
-}
-
-.breadcrumbs a {
-    color: var(--text-dim);
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.breadcrumbs a:hover {
-    color: var(--text-accent);
-}
-</style>

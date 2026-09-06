@@ -1,0 +1,16 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '~/assets/portrait.png';
+---
+
+<figure class="portrait relative m-0 aspect-square w-full">
+  <Image
+    class="portrait__image block size-full object-contain"
+    src={portrait}
+    alt="Portrait of Maciej Mieńko"
+    widths={[320, 480, 720]}
+    sizes="(max-width: 48rem) 23rem, 32rem"
+    loading="eager"
+    fetchpriority="high"
+  />
+</figure>

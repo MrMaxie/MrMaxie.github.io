@@ -1,0 +1,81 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import Section from '~/components/ui/Section.astro';
+import type { Mod } from '~/lib/mods';
+
+type Screenshot = NonNullable<Mod['screenshots']>[number];
+
+interface Props {
+  id: string;
+  screenshots: Screenshot[];
+}
+
+const { id, screenshots } = Astro.props;
+const slideCount = screenshots.length;
+const slidesId = `${id}-slides`;
+---
+
+<Section
+  title="Screenshots"
+  icon="tabler:photo"
+  id={id}
+  class="mod-slideshow flex flex-col overflow-hidden"
+  aria-roledescription="carousel"
+  data-mod-slideshow
+  data-page-reveal
+>
+  <div class="mod-slideshow__viewport border-b border-line" id={slidesId} data-mod-slideshow-viewport>
+    <div class="mod-slideshow__container grid gap-px bg-line">
+      {screenshots.map((screenshot, index) => (
+          <fieldset
+            class="mod-slideshow__slide m-0 min-w-0 border-0 bg-surface-strong p-0"
+            aria-roledescription="slide"
+            aria-label={`${index + 1} of ${slideCount}`}
+            data-mod-slideshow-slide
+          >
+            <Image
+              class="block aspect-video h-auto w-full object-cover"
+              src={screenshot.image}
+              alt={screenshot.alt}
+              widths={[640, 960, 1440]}
+              sizes="(max-width: 52rem) 100vw, 70rem"
+            />
+          </fieldset>
+        ))}
+    </div>
+  </div>
+
+  <div class="mod-slideshow__controls hidden items-center justify-between gap-4 p-5" data-mod-slideshow-controls>
+    <p class="m-0 font-mono text-xs text-text-muted tabular-nums" aria-live="polite" aria-atomic="true">
+      <span data-mod-slideshow-current>1</span>
+      <span aria-hidden="true"> / </span>
+      <span class="sr-only">of</span>
+      <span>{slideCount}</span>
+    </p>
+    <div class="flex gap-2">
+      <button
+        class="mod-slideshow__button grid size-11 cursor-pointer place-items-center border border-line bg-transparent p-0 text-text disabled:cursor-default disabled:text-text-muted disabled:opacity-42"
+        type="button"
+        aria-controls={slidesId}
+        aria-label="Show previous image"
+        data-mod-slideshow-prev
+      >
+        <Icon class="size-4.5" name="tabler:chevron-left" aria-hidden="true" />
+      </button>
+      <button
+        class="mod-slideshow__button grid size-11 cursor-pointer place-items-center border border-line bg-transparent p-0 text-text disabled:cursor-default disabled:text-text-muted disabled:opacity-42"
+        type="button"
+        aria-controls={slidesId}
+        aria-label="Show next image"
+        data-mod-slideshow-next
+      >
+        <Icon class="size-4.5" name="tabler:chevron-right" aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+</Section>
+
+<script>
+import '~/scripts/mod-slideshow';
+</script>

@@ -1,0 +1,28 @@
+---
+import ProjectCard from '~/components/projects/ProjectCard.astro';
+import CatalogHeader from '~/components/ui/CatalogHeader.astro';
+import BaseLayout from '~/layouts/Base.astro';
+import { getProjects } from '~/lib/projects';
+import Routes from '~/lib/routes';
+
+const projects = await getProjects();
+---
+
+<BaseLayout
+  smallerHeader
+  title={["Projects"]}
+  description="A portfolio of software designed and built by Maciej Mieńko, with project context, technical decisions, releases, and source links."
+>
+  <div class="projects-page">
+    <CatalogHeader
+      eyebrow="Work I am proud of"
+      title="Projects"
+      description="Tools for my development work and experiments that started with a question. Read how they work, or follow the source and documentation."
+      actions={[{ href: Routes.topics(), label: "Browse all topics" }]}
+    />
+
+    <section class="mt-4 grid grid-cols-2 gap-4 max-content:grid-cols-1" aria-label="Project portfolio">
+      {projects.map((project) => <ProjectCard project={project} />)}
+    </section>
+  </div>
+</BaseLayout>

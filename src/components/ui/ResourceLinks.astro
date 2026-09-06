@@ -1,0 +1,24 @@
+---
+import { Icon } from 'astro-icon/components';
+import { LinkKind, normalizeLinks, type ResourceLink } from '~/lib/content';
+import { getModLinkIcon } from '~/lib/mod-link-icons';
+
+interface Props {
+  links: readonly ResourceLink[];
+  name: string;
+  compact?: boolean;
+}
+const { links, name, compact = false } = Astro.props;
+const icons = {
+  [LinkKind.Website]: 'tabler:world',
+  [LinkKind.Source]: 'tabler:brand-github',
+  [LinkKind.Issues]: 'tabler:message-report',
+};
+const visibleLinks = normalizeLinks(links).filter(link => !compact || link.kind !== LinkKind.Issues);
+---
+
+{visibleLinks.length > 0 && <div class="project-actions relative z-3 flex flex-wrap items-center gap-2">
+  {visibleLinks.map(link => <a class="resource-chip project-action border-line text-text-muted" href={link.href} aria-label={`${name}: ${link.label}`}>
+    <Icon class="size-4 flex-none stroke-action" name={link.kind ? icons[link.kind] : getModLinkIcon(link.href)} aria-hidden="true" />{link.label}
+  </a>)}
+</div>}

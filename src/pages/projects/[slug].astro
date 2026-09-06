@@ -1,0 +1,33 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import Description from '~/components/ui/Description.astro';
+import ResourceHeader from '~/components/ui/ResourceHeader.astro';
+import ResourceNavigation from '~/components/ui/ResourceNavigation.astro';
+import BaseLayout from '~/layouts/Base.astro';
+import { getProjects } from '~/lib/projects';
+import Routes from '~/lib/routes';
+import { cssVariables } from '~/lib/styles';
+
+export const getStaticPaths = (async () => {
+  const resources = await getProjects();
+  return resources.map((resource, index) => ({
+    params: { slug: resource.slug },
+    props: { resource, previous: resources[index - 1], next: resources[index + 1] },
+  }));
+}) satisfies GetStaticPaths;
+interface Props extends InferGetStaticPropsType<typeof getStaticPaths> {}
+const { resource, previous, next } = Astro.props;
+---
+
+<BaseLayout
+  smallerHeader
+  title={[resource.name, 'Projects']}
+  description={resource.summary}
+  crumbs={[{ label: 'Projects', href: Routes.projects() }, { label: resource.name }]}
+>
+  <article class="project-detail flex flex-col gap-10" style={cssVariables({ '--project-color': resource.color })}>
+    <ResourceHeader resource={resource} />
+    <Description content={resource.description} />
+    <ResourceNavigation title="More projects" previous={previous} next={next} />
+  </article>
+</BaseLayout>

@@ -22,3 +22,10 @@ pnpm-debug.log*
 
 # Build files
 dist/
+
+# Playwright
+.playwright-cli/
+.playwright-mcp/
+
+# Local files
+.local/

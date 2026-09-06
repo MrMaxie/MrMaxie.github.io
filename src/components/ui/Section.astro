@@ -1,0 +1,19 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import ContentPanel from './ContentPanel.astro';
+import PanelHeading from './PanelHeading.astro';
+
+interface Props extends HTMLAttributes<'section'> {
+  title?: string;
+  icon?: string;
+  action?: { href: string; label: string };
+}
+
+const { title, icon, action, id, class: className, ...attributes } = Astro.props;
+const titleId = id && title ? `${id}-title` : undefined;
+---
+
+<section id={id} class:list={['min-w-0', className]} aria-labelledby={titleId} {...attributes}>
+  {title && <PanelHeading title={title} id={titleId} icon={icon} action={action} outside />}
+  <ContentPanel as="div"><slot /></ContentPanel>
+</section>

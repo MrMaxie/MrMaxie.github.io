@@ -1,0 +1,28 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  title: string;
+  id?: string;
+  icon?: string;
+  action?: { href: string; label: string };
+  outside?: boolean;
+}
+
+const { title, id, icon, action, outside = false } = Astro.props;
+---
+
+<header
+  class:list={['section-heading flex flex-wrap items-center justify-between gap-x-6 gap-y-2', { 'pb-5': outside, 'border-b border-line px-6 py-3': !outside }]}
+>
+  <h2 class="flex items-center gap-3 text-lg leading-snug tracking-normal" id={id}>
+    {icon && <Icon class="section-icon size-4.5 flex-none" name={icon} aria-hidden="true" />}
+    {title}
+  </h2>
+  {action && (
+    <a class="context-link inline-flex min-h-8 items-center gap-2 text-sm font-semibold text-text no-underline" href={action.href}>
+      {action.label}
+      <Icon class="size-4" name="tabler:arrow-right" aria-hidden="true" />
+    </a>
+  )}
+</header>

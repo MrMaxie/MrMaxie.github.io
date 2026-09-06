@@ -1,0 +1,35 @@
+---
+import ProjectMark from '~/components/projects/ProjectMark.astro';
+import type { ResourceData } from '~/lib/content';
+import ResourceLinks from './ResourceLinks.astro';
+import ResourceMetadata from './ResourceMetadata.astro';
+import Section from './Section.astro';
+import Tags from './Tags.astro';
+
+interface Props {
+  resource: ResourceData;
+  eyebrow?: { label: string; href: string };
+}
+const { resource, eyebrow } = Astro.props;
+---
+
+<Section>
+  <header class="flex flex-wrap items-start justify-between gap-6 p-panel" data-page-reveal>
+    <div class="min-w-0 flex-1 basis-80">
+      {eyebrow && <a class="mb-3 block w-fit font-mono text-xs text-project" href={eyebrow.href}>{eyebrow.label}</a>}
+      <div class="flex items-center gap-4">
+        <ProjectMark project={resource} variant="detail" />
+        <div class="min-w-0">
+          <h1 class="text-detail-title leading-tight wrap-anywhere">
+            {resource.name.split(/(?<=[a-z])(?=[A-Z])/).map(part => <Fragment>{part}<wbr /></Fragment>)}
+          </h1>
+          <ResourceMetadata version={resource.version} license={resource.license} access={resource.access} />
+        </div>
+      </div>
+      <div class="mt-4 [&_.tags]:justify-start">
+        <Tags tags={resource.tags} />
+      </div>
+    </div>
+    <ResourceLinks name={resource.name} links={resource.links} />
+  </header>
+</Section>

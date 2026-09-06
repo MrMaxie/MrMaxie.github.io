@@ -1,0 +1,28 @@
+---
+import { Icon } from 'astro-icon/components';
+import { Access } from '~/lib/content';
+import Tooltip from './Tooltip.astro';
+
+interface Props {
+  version?: string;
+  license?: string;
+  access?: Access;
+}
+const { version, license, access } = Astro.props;
+const accessLabels = {
+  [Access.Private]: { label: 'Private', description: 'This project is not publicly available.' },
+  [Access.Proprietary]: {
+    label: 'Proprietary',
+    description: 'This software belongs to its owner and is not offered as open source.',
+  },
+};
+---
+
+<div
+  class="resource-metadata relative z-4 mt-1 flex min-h-4 flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs leading-normal text-text-muted"
+>
+  {access && <Tooltip text={accessLabels[access].description}><Icon name="tabler:lock" class="size-3" aria-hidden="true" />{accessLabels[access].label}</Tooltip>}
+  {version && <Tooltip text={`Version ${version}`}><Icon name="tabler:tag" class="size-3" aria-hidden="true" /><span class="sr-only">Version </span>{version}</Tooltip>}
+  {license && <Tooltip text={`Published under the ${license} license.`}><Icon name="tabler:scale" class="size-3" aria-hidden="true" /><span class="sr-only">License </span>{license}</Tooltip>}
+  {!version && !license && !access && <span aria-hidden="true">&nbsp;</span>}
+</div>

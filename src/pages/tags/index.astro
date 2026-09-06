@@ -1,0 +1,63 @@
+---
+import { Icon } from 'astro-icon/components';
+
+import CatalogHeader from '~/components/ui/CatalogHeader.astro';
+import InteractiveSpotlight from '~/components/ui/InteractiveSpotlight.astro';
+import ResourceArrow from '~/components/ui/ResourceArrow.astro';
+import BaseLayout from '~/layouts/Base.astro';
+import Routes from '~/lib/routes';
+import { cssVariables } from '~/lib/styles';
+import { getTopicGroups } from '~/lib/topics';
+
+const topics = await getTopicGroups();
+---
+
+<BaseLayout
+  smallerHeader
+  title={['Topics']}
+  description="Browse Maciej Mieńko's projects and mods by technology, problem space, and workflow."
+>
+  <div class="topics-page">
+    <CatalogHeader title="Topics" description="Find projects and mods by the tools and ideas behind them." />
+
+    <div class="mt-4 grid grid-cols-2 gap-4 max-topic-grid:grid-cols-1">
+      {topics.map(topic => {
+
+
+                return (
+                    <article
+                        class="topic-card relative isolate grid min-h-40 min-w-0 cursor-pointer grid-cols-[3rem_minmax(0,1fr)_auto] items-start gap-4 overflow-hidden border border-line bg-surface p-panel max-phone:grid-cols-[2.5rem_minmax(0,1fr)_auto] max-phone:p-4"
+                        data-page-reveal
+                        data-interactive-surface
+                        data-spotlight-surface
+                        style={cssVariables({
+                          '--topic-color': topic.color,
+                          '--spotlight-color': topic.color,
+                          '--resource-color': topic.color,
+                        })}
+                    >
+                        <InteractiveSpotlight />
+                        <div class="text-topic" aria-hidden="true">
+                            {topic.icon && <Icon class="size-9.5 stroke-subtle" name={topic.icon} />}
+                        </div>
+                        <div>
+                            <h2 class="text-2xl leading-tight">
+                                <a class="topic-card__link text-inherit no-underline focus-visible:outline-none" href={Routes.topic(topic.slug)}>{topic.name}</a>
+                            </h2>
+                            <p class="mt-3 max-w-lg text-text-muted">{topic.description}</p>
+                            <dl class="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs text-text-muted">
+                              {[
+                                { label: 'Projects', count: topic.projects.length },
+                                { label: 'Mods', count: topic.mods.length },
+                              ].filter(group => group.count > 0).map(group => (
+                                <div class="flex gap-2"><dt>{group.label}</dt><dd class="m-0 text-text">{group.count}</dd></div>
+                              ))}
+                            </dl>
+                        </div>
+                        <ResourceArrow class="relative z-1" />
+                    </article>
+                );
+            })}
+    </div>
+  </div>
+</BaseLayout>

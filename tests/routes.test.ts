@@ -3,11 +3,13 @@ import test from 'node:test';
 import Routes from '../src/lib/routes.ts';
 
 test('generates the stable public route shapes', () => {
-    assert.equal(Routes.home(), '/');
-    assert.equal(Routes.about(), '/about');
-    assert.equal(Routes.articles(), '/blog');
-    assert.equal(Routes.articles(2), '/blog/page/2');
-    assert.equal(Routes.article('php-game-development'), '/blog/article/php-game-development');
-    assert.equal(Routes.tag('game-development'), '/blog/tag/game-development');
-    assert.equal(Routes.tag('game-development', 2), '/blog/tag/game-development/2');
+  assert.equal(Routes.home(), '/');
+  assert.equal(Routes.projects(), '/projects');
+  assert.equal(Routes.project('arcantry'), '/projects/arcantry');
+  assert.equal(Routes.mods(), '/mods');
+  assert.equal(Routes.mod('boss-scaler'), '/mods/boss-scaler');
+  assert.equal(Routes.modGame('terraria'), '/mods#terraria');
+  assert.equal(Routes.topics(), '/tags');
+  assert.equal(Routes.topic('typescript'), '/tags/typescript');
+  assert.equal(Routes.about(), '/about');
 });

@@ -1,0 +1,39 @@
+---
+import { Icon } from 'astro-icon/components';
+
+import Section from '~/components/ui/Section.astro';
+import Routes from '~/lib/routes';
+
+interface Props {
+  id?: string;
+  showIssueLink?: boolean;
+}
+const { id = 'contact', showIssueLink = true } = Astro.props;
+---
+
+<Section
+  title="Contact"
+  icon="tabler:mail"
+  id={id}
+  tabindex="-1"
+  aria-labelledby={`${id}-title`}
+  class="scroll-mt-24 max-nav:scroll-mt-36"
+  style="--section-color: var(--accent-secondary)"
+>
+  <div class="flex flex-wrap items-center justify-between gap-x-8 gap-y-3 px-6 py-5">
+    <p class="text-text-muted">Want to work together or ask about a project?</p>
+    <a
+      class="resource-chip project-action flex-none border-line text-text-muted"
+      href="https://www.linkedin.com/in/maciej-mie%C5%84ko-b0200b190/"
+    >
+      <Icon class="size-4" name="tabler:brand-linkedin" aria-hidden="true" />
+      Contact me on LinkedIn
+    </a>
+  </div>
+  {showIssueLink && (
+    <p class="border-t border-line px-6 py-4 text-sm text-text-muted">
+      <strong class="font-semibold text-text">Found a bug?</strong> Each public project links to its issue tracker.
+      <a class="evidence-link ml-1 inline-flex min-h-6 items-center gap-1 text-text underline underline-offset-4" href={Routes.projects()}>Choose a project <Icon class="size-4" name="tabler:arrow-right" aria-hidden="true" /></a>
+    </p>
+  )}
+</Section>

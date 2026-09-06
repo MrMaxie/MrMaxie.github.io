@@ -1,32 +1,31 @@
 set dotenv-load := false
+set indentation := "  "
 
 _default:
-    @just --list
+  @just --list
 
 setup:
-    nub install
+  nub install
 
 dev port="1997":
-    nub exec astro dev --host 127.0.0.1 --port {{ port }} --force
+  nub exec astro dev --host 127.0.0.1 --port {{ port }} --force
 
-preview port="4321":
-    nub exec astro preview --host 127.0.0.1 --port {{ port }}
+preview port="1997":
+  nub exec astro preview --host 127.0.0.1 --port {{ port }}
 
 format:
-    nub exec biome check --write .
+  nub --experimental-strip-types scripts/tailwind-classes.ts --write
+  nub exec biome check --write .
 
 check:
-    nub exec biome check .
+  nub exec biome check .
+  nub --experimental-strip-types scripts/tailwind-classes.ts
 
 build:
-    nub run build
-
-openspec-validate:
-    nub run openspec:validate
+  nub exec astro build
 
 ci:
-    just openspec-validate
-    just check
-    nub run check:astro
-    nub run test
-    just build
+  just check
+  nub exec astro check
+  just build
+  nub --test --experimental-strip-types tests/*.test.ts

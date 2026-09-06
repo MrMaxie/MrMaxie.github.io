@@ -1,0 +1,13 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'section'> {
+  as?: 'section' | 'aside' | 'header' | 'div';
+}
+
+const { as: Element = 'section', class: className, ...attributes } = Astro.props;
+---
+
+<Element class:list={['content-panel min-w-0 border border-line bg-surface', className]} {...attributes}>
+  <slot />
+</Element>

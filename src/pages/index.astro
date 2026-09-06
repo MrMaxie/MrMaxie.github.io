@@ -1,31 +1,45 @@
 ---
-import ArticleSummary from '~/components/blog/ArticleSummary.astro';
+import ModCard from '~/components/mods/ModCard.astro';
+import ProjectCard from '~/components/projects/ProjectCard.astro';
+import Section from '~/components/ui/Section.astro';
 import BaseLayout from '~/layouts/Base.astro';
-import { getArticles } from '~/lib/articles';
-import { formatDate } from '~/lib/date';
+import { getFeaturedMods, getGame } from '~/lib/mods';
+import { getFeaturedProjects } from '~/lib/projects';
 import Routes from '~/lib/routes';
 
-const lastArticles = (await getArticles()).slice(0, 3);
+const pickedProjects = await getFeaturedProjects();
+const featuredMods = await getFeaturedMods();
 ---
 
-<BaseLayout>
-    <h1>Latest articles</h1>
-    {lastArticles.map(article => (
-        <ArticleSummary
-            title={article.data.title}
-            date={formatDate(article.data.date)}
-            tags={article.data.tags}
-            description={article.data.description}
-            href={Routes.article(article.id)}
-        />
-    ))}
-    <a href={Routes.articles()} class="read-more">View all articles</a>
+<BaseLayout
+  description="Maciej Mieńko is a software developer focused on developer tools, local infrastructure, and technically unusual problems."
+>
+  <div class="home-page flex flex-col gap-14 pb-6" data-home-page>
+    <Section
+      title="Selected projects"
+      icon="tabler:code"
+      action={{ href: Routes.projects(), label: 'All projects' }}
+      class="home-section"
+      style="--section-color: var(--accent)"
+      id="featured"
+      data-home-reveal
+    >
+      <div class="home-projects grid grid-cols-2 max-content:grid-cols-1" data-count={pickedProjects.length}>
+        {pickedProjects.map(project => <ProjectCard project={project} variant="featured" headingLevel="h3" showActions={false} />)}
+      </div>
+    </Section>
+    <Section
+      title="Mods"
+      icon="tabler:device-gamepad-2"
+      action={{ href: Routes.mods(), label: 'All mods' }}
+      class="home-section"
+      style="--section-color: var(--spark)"
+      id="mods"
+      data-home-reveal
+    >
+      <div class="home-mods grid grid-cols-2 max-content:grid-cols-1">
+        {featuredMods.map(mod => <ModCard mod={mod} game={getGame(mod.game)} showLinks={false} compact />)}
+      </div>
+    </Section>
+  </div>
 </BaseLayout>
-
-<style>
-.read-more {
-    display: block;
-    text-align: center;
-    margin-top: 2rem;
-}
-</style>

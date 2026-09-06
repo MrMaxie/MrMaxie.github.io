@@ -1,61 +1,16 @@
 ---
 import { Icon } from 'astro-icon/components';
+import ContentPanel from '~/components/ui/ContentPanel.astro';
 import BaseLayout from '~/layouts/Base.astro';
 ---
 
-<BaseLayout title={['Not Found']} canonical="!remove">
-    <div class="error-page">
-        <Icon name="tabler:error-404" aria-hidden="true" />
-        <h1>Not Found</h1>
-        <p>Sorry, the page you are looking for does not exist.</p>
-        <a href="/">Back to Home</a>
-    </div>
+<BaseLayout smallerHeader title={['Not Found']} canonical="!remove">
+  <ContentPanel as="div" class="flex min-h-[55vh] flex-1 flex-col items-center justify-center p-6">
+    <Icon class="size-16 text-accent-secondary" name="tabler:error-404" aria-hidden="true" />
+    <h1 class="mt-2 max-w-[12ch] text-center text-detail-title leading-tight">That page is not here.</h1>
+    <p class="mt-4 max-w-lg text-center text-base text-text-muted">
+      The address may be wrong, or the page may have moved.
+    </p>
+    <a class="mt-3 border border-accent px-4 py-3 font-semibold text-text no-underline" href="/">Go home</a>
+  </ContentPanel>
 </BaseLayout>
-
-<style>
-.error-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-}
-
-.error-page > :global(svg) {
-    height: 10rem;
-    width: 10rem;
-    color: var(--text-dim);
-    animation: bounce 5s infinite;
-}
-
-@keyframes bounce {
-    0%,
-    20%,
-    50%,
-    80%,
-    100% {
-        transform: translateY(0);
-        color: var(--text);
-    }
-
-    40% {
-        transform: translateY(-20px);
-        color: var(--text-dim);
-    }
-
-    60% {
-        transform: translateY(-10px);
-        color: var(--text-dim);
-    }
-}
-
-.error-page h1 {
-    font-size: 2rem;
-    margin-top: 1rem;
-}
-
-.error-page p {
-    font-size: 1.2rem;
-    color: var(--text-dim);
-}
-</style>

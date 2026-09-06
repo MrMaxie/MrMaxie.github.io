@@ -1,0 +1,261 @@
+@import "tailwindcss" source("../");
+@import "./effects.css";
+
+@source not "../assets";
+@source not "../config";
+@source not "../data";
+@source not "../lib";
+@source not "../scripts";
+@source not "../styles";
+@source not inline("resize");
+@source not inline("transition");
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-white: #fff;
+  --color-black: #000;
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-spark: var(--spark);
+  --color-focus: var(--focus);
+  --color-catalog: var(--catalog-color);
+  --color-mod: var(--mod-color);
+  --color-project: var(--project-color);
+  --color-tag: var(--tag-color, var(--text-muted));
+  --color-topic: var(--topic-color);
+  --font-sans: var(--font-karla);
+  --font-brand: var(--font-outfit);
+  --font-mono: var(--font-fira-code);
+  --spacing-section-gap: clamp(2rem, 5vw, 3.5rem);
+  --spacing-card-summary: 6.5em;
+  --spacing-panel: clamp(1.25rem, 3vw, 2rem);
+  --text-story-heading: 1.7rem;
+  --leading-story: 1.85;
+  --text-detail-title: clamp(2rem, 4.5vw, 3.25rem);
+  --breakpoint-footer: 28rem;
+  --breakpoint-identity: 32rem;
+  --breakpoint-phone: 34rem;
+  --breakpoint-compact: 42rem;
+  --breakpoint-nav: 46rem;
+  --breakpoint-tablet: 48rem;
+  --breakpoint-topic-grid: 50rem;
+  --breakpoint-content: 52rem;
+  --breakpoint-summary: 56rem;
+}
+
+@utility resource-chip {
+  display: inline-flex;
+  min-height: 1.65rem;
+  align-items: center;
+  gap: 0.32rem;
+  border-width: 1px;
+  padding: 0.18rem 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.65;
+  text-decoration: none;
+}
+
+@utility stroke-subtle {
+  stroke-width: 1.5;
+}
+
+@utility stroke-arrow {
+  stroke-width: 1.65;
+}
+
+@utility stroke-action {
+  stroke-width: 1.75;
+}
+
+@utility stroke-icon {
+  stroke-width: 1.8;
+}
+
+@utility stroke-link {
+  stroke-width: 1.9;
+}
+
+:root {
+  color-scheme: light dark;
+  --site-gutter: 1.5rem;
+  --site-max-width: 74rem;
+  --canvas: #f7f7f8;
+  --surface: #fcfcfd;
+  --surface-strong: #dfe9f5;
+  --text: #171419;
+  --text-muted: #59545d;
+  --line: #c2ccd6;
+  --accent: #17628e;
+  --accent-hover: #104a6b;
+  --accent-contrast: #ffffff;
+  --accent-secondary: #6b55ce;
+  --spark: #d7aa18;
+  --focus: #6b55ce;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #131315;
+  --surface: #1a1a1d;
+  --surface-strong: #29292e;
+  --text: #f3f3f5;
+  --text-muted: #bfbfc5;
+  --line: #35353b;
+  --accent: #79c9ff;
+  --accent-hover: #a8dcff;
+  --accent-contrast: #08111b;
+  --accent-secondary: #b39aff;
+  --spark: #ffd166;
+  --focus: #f0d05b;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+html {
+  min-width: 20rem;
+  overflow-x: clip;
+  scroll-behavior: smooth;
+  background: var(--canvas);
+}
+
+body {
+  min-height: 100dvh;
+  position: relative;
+  overflow-x: clip;
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+}
+
+.site-container {
+  width: min(calc(100% - (var(--site-gutter) * 2)), var(--site-max-width));
+  margin-inline: auto;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  text-decoration-color: transparent;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.22em;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    text-decoration-color 160ms ease,
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 0.16rem solid var(--focus);
+  outline-offset: 0.24rem;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+code,
+pre,
+time {
+  font-family: var(--font-mono);
+}
+
+@layer base {
+  h1,
+  h2,
+  h3 {
+    color: var(--text);
+    font-family: var(--font-brand);
+    font-weight: 580;
+    letter-spacing: -0.035em;
+    line-height: 0.98;
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: clamp(2.35rem, 6vw, 4.6rem);
+  }
+
+  h2 {
+    font-size: clamp(1.9rem, 4vw, 3rem);
+  }
+
+  h3 {
+    font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+  }
+}
+
+p {
+  text-wrap: pretty;
+}
+
+*::-webkit-scrollbar {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--canvas);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border: 0.2rem solid var(--canvas);
+}
+
+@media (max-width: 42rem) {
+  :root {
+    --site-gutter: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+    /* biome-ignore lint/complexity/noImportantStyles: The system preference must override component-specific transitions. */
+    transition-duration: 0.01ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: The system preference must override component-specific animations. */
+    animation-duration: 0.01ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: The system preference must override repeating animations. */
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@utility scale-pressed {
+  scale: 0.98;
+}

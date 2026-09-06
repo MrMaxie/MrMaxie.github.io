@@ -1,0 +1,45 @@
+---
+import { Icon } from 'astro-icon/components';
+
+import type { ResourceData } from '~/lib/content';
+import { getTagDefinitions, tagToSlug } from '~/lib/tags';
+import ProjectLogo from './ProjectLogo.astro';
+
+interface Props {
+  project: ResourceData;
+  variant?: 'card' | 'detail';
+  showFallback?: boolean;
+}
+
+const { project, variant = 'card', showFallback = false } = Astro.props;
+const definitions = showFallback ? await getTagDefinitions() : new Map();
+const tagIcon = showFallback
+  ? project.tags.map(tag => definitions.get(tagToSlug(tag))).find(definition => definition?.icon)?.icon
+  : undefined;
+const icon = project.icon ?? tagIcon;
+const isDetail = variant === 'detail';
+const shouldRender = project.logo || icon || showFallback;
+---
+
+{shouldRender && (
+  <div
+    class:list={[
+      'project-mark relative z-1 grid flex-none place-items-center text-project',
+      isDetail ? 'size-14' : 'project-resource-card__brand size-12',
+    ]}
+    aria-hidden="true"
+  >
+    {project.logo ? (
+      <ProjectLogo
+        class:list={['size-full object-contain', { 'dark:invert': project.logoTone === 'light' }]}
+        src={project.logo}
+        widths={[64, 96]}
+        sizes={isDetail ? '3.5rem' : '3rem'}
+      />
+    ) : icon ? (
+      <Icon class:list={['stroke-subtle', { 'size-12': isDetail, 'size-10': !isDetail }]} name={icon} />
+    ) : (
+      <span class="font-brand text-2xl">{project.monogram ?? project.name.slice(0, 2)}</span>
+    )}
+  </div>
+)}
