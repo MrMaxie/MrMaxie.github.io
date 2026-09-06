@@ -81,6 +81,12 @@ The two small Outfit/Karla alphabet extensions are embedded in the existing CSS,
 
 Local results differ: embedding the extensions improved the mod list's first render but regressed homepage performance from 98 to 97. Reports show different HTML delivery costs: the runner transferred about 24 KB for a 108 KB document, whereas the local preview transferred the full document. The embedding is retained based on the target runner's result, without claiming a universal performance improvement. A further homepage Fira preload was not retained because it delayed the portrait's LCP. Stable mobile performance 100 remains unresolved; neither audit conditions nor page animations were relaxed.
 
+## Audit transport parity
+
+A fresh production check confirmed HTTP/2 and gzip for `https://maxie.dev/mods/`. The earlier CI preview used HTTP/1.1; Lighthouse's simulated connection costs therefore did not represent the deployed transport. CI now enables Vite's HTTPS/HTTP/2 preview and checks the document protocol in every Lighthouse report.
+
+Each disposable Linux runner creates a one-day certificate for localhost and trusts that exact certificate in Chromium's certificate database and the Node test client. Certificate validation remains enabled; no browser certificate-error bypass or Lighthouse rule exception is used. Keys stay outside uploaded reports. Local audits retain HTTP/1.1 unless `AUDIT_TLS_CERT` and `AUDIT_TLS_KEY` identify a certificate already trusted by the test clients. Results from different transports must not be presented as interchangeable. The HTTP/2 runner result must be verified independently before claiming that the remaining performance gate passes.
+
 ## References
 
 - [Permissions-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Permissions-Policy)
@@ -91,3 +97,5 @@ Local results differ: embedding the extensions improved the mod list's first ren
 - [llms.txt proposal and format](https://llmstxt.org/)
 - [Web font loading and preload guidance](https://web.dev/learn/performance/optimize-web-fonts)
 - [HarfBuzz-based variable font subsetting](https://github.com/papandreou/subset-font)
+- [Vite HTTPS/HTTP/2 preview](https://v8.vite.dev/config/preview-options#preview-https)
+- [Chromium Linux certificate management](https://chromium.googlesource.com/chromium/src/+/master/docs/linux/cert_management.md)
