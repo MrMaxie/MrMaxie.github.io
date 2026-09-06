@@ -1,11 +1,11 @@
-import { mkdtemp, writeFile } from 'node:fs/promises';
+import { writeFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
-import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import lighthouse from 'lighthouse';
 import desktopConfig from 'lighthouse/core/config/desktop-config.js';
 import { chromium } from 'playwright';
-import { productionPreview } from '../tests/helpers/site-audit.ts';
+import { lighthouseFailures } from '../tests/helpers/audit-thresholds.ts';
+import { auditOutput, productionPreview } from '../tests/helpers/site-audit.ts';
 
 async function availablePort(): Promise<number> {
   const socket = createServer();
@@ -19,9 +19,10 @@ async function availablePort(): Promise<number> {
   return address.port;
 }
 
-const output = await mkdtemp(join(tmpdir(), 'portfolio-lighthouse-'));
+const output = await auditOutput('lighthouse');
 const { server, baseURL } = await productionPreview();
 const summary: unknown[] = [];
+const failures: string[] = [];
 try {
   for (const route of ['/', '/projects/maxiedev-events/', '/mods/boss-scaler/']) {
     for (const profile of ['mobile', 'desktop']) {
@@ -31,6 +32,8 @@ try {
         const port = await availablePort();
         const browser = await chromium.launch({
           executablePath: chromium.executablePath(),
+          // Audit the normal browser cache behavior rather than Playwright's disabled default.
+          ignoreDefaultArgs: ['--disable-back-forward-cache'],
           args: [`--remote-debugging-port=${port}`],
         });
         try {
@@ -44,15 +47,17 @@ try {
             },
             profile === 'desktop' ? desktopConfig : undefined,
           );
-          if (!result || result.lhr.runtimeError)
-            throw new Error(JSON.stringify(result?.lhr.runtimeError ?? 'No report'));
+          if (!result) throw new Error('No Lighthouse report');
           await writeFile(`${path}.report.json`, result.report[0]);
           await writeFile(`${path}.report.html`, result.report[1]);
+          if (result.lhr.runtimeError) throw new Error(JSON.stringify(result.lhr.runtimeError));
+          failures.push(...lighthouseFailures(result.lhr).map(failure => `${route} ${profile} run ${run}: ${failure}`));
           summary.push({
             route,
             profile,
             run,
             version: result.lhr.lighthouseVersion,
+            cls: result.lhr.audits['cumulative-layout-shift'].numericValue,
             categories: Object.fromEntries(
               Object.entries(result.lhr.categories).map(([key, value]) => [key, value.score]),
             ),
@@ -65,6 +70,7 @@ try {
       }
     }
   }
+  if (failures.length) throw new Error(`Lighthouse quality gates failed:\n${failures.join('\n')}`);
 } finally {
   await server.stop();
   console.log(`Lighthouse reports: ${output}`);
