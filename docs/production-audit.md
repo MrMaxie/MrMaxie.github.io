@@ -43,11 +43,11 @@ The six initial live diagnostic runs measured performance 97 mobile / 100 deskto
 
 The file is a reading guide, not a crawler permission file or a guarantee of search ranking or inclusion in an AI answer. `robots.txt`, the sitemap, canonical URLs and visible HTML remain independently validated. Browser tests check the generated guide's format and that its internal links return 200 without redirects.
 
-## Final local verification
+## Verification before font subsetting
 
 The production build and 54 unit/contract tests passed. The browser audit passed 375 tests across all generated pages, both themes and 320/390/1440 px viewports, including keyboard interactions, reduced motion, post-navigation animation parameters, delayed fonts, canonical links and `llms.txt`. Visual comparison of the homepage and mod list at 390/1440 px retained the measured heading and brand geometry.
 
-The final Lighthouse series completed all 30 runs. Accessibility, best practices and SEO were 100 throughout, desktop performance was 100 throughout, and the largest CLS was 0.000115. Mobile performance remains below the new 100-point gate:
+That local Lighthouse series completed all 30 runs. Accessibility, best practices and SEO were 100 throughout, desktop performance was 100 throughout, and the largest CLS was 0.000115. Mobile performance was below the new 100-point gate:
 
 | Route | Before optimization, mobile | Final mobile runs |
 | --- | --- | --- |
@@ -63,6 +63,14 @@ The remaining mobile cost is initial rendering and delivery of the document, fon
 
 Native screen-reader listening, browser UI zoom and actual Facebook/Discord previews were not repeated in this audit. Automated accessibility checks do not replace those manual checks.
 
+## Font subsetting follow-up
+
+The first branch CI run completed all 30 measurements with mobile performance 99 and every other category/profile at 100. The strict gate rejected 99, and the reports were uploaded and downloaded despite the failure: [CI evidence](https://github.com/MrMaxie/MrMaxie.github.io/actions/runs/34053716482).
+
+Production builds now subset the installed fonts using the site's source characters, including encoded entities and escapes. HarfBuzz preserves the variable weight axes, shaping features and hinting. Development uses complete fonts so editing can introduce new characters immediately. Font assets receive content-based filenames, and the original licenses accompany the build. Small font files remain external to respect the existing inline-CSS budget.
+
+The three Latin files fell from approximately 100 KB to 70 KB. The Outfit and Karla extended files fell from approximately 30 KB together to 2.7 KB. A comparison of the homepage and mod list at 390/1440 px found identical pixels and geometry before and after subsetting. The build, inline-CSS budget and 55 unit/contract tests pass. These byte and visual checks do not by themselves establish a 100-point Lighthouse result; the repeated CI audit remains authoritative for its runner.
+
 ## References
 
 - [Permissions-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Permissions-Policy)
@@ -72,3 +80,4 @@ Native screen-reader listening, browser UI zoom and actual Facebook/Discord prev
 - [Google HTTP and network error guidance](https://developers.google.com/search/docs/crawling-indexing/http-network-errors)
 - [llms.txt proposal and format](https://llmstxt.org/)
 - [Web font loading and preload guidance](https://web.dev/learn/performance/optimize-web-fonts)
+- [HarfBuzz-based variable font subsetting](https://github.com/papandreou/subset-font)
