@@ -16,11 +16,7 @@ const firstBanner = groups[0]
   : undefined;
 ---
 
-<BaseLayout
-  smallerHeader
-  title={['Mods']}
-  description="Game mods by Maciej Mieńko for Terraria, The Binding of Isaac, and Hogwarts Legacy."
->
+<BaseLayout smallerHeader title={['Mods']} description="Game mods by Maciej Mieńko.">
   {firstBanner && <link slot="head" rel="preload" as="image" type="image/avif" imagesrcset={firstBanner.srcSet.attribute} imagesizes={bannerSizes} fetchpriority="high" />}
   <div class="mods-page">
     <CatalogHeader

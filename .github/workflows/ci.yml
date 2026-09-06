@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [master, feat/2.0, fix/production-audit-regressions]
+    branches: [master]
   pull_request:
 
 permissions:
