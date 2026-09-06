@@ -1,0 +1,13 @@
+---
+import type { ResourceData } from '~/lib/content';
+import Section from './Section.astro';
+
+interface Props {
+  content: ResourceData['description'];
+}
+const { content: Content } = Astro.props;
+---
+
+<Section title="Description" icon="tabler:align-left" id="description">
+  <div class="description p-panel" data-project-description data-page-reveal><Content /></div>
+</Section>

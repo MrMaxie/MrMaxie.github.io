@@ -1,0 +1,67 @@
+---
+import { Icon } from 'astro-icon/components';
+
+import Routes from '~/lib/routes';
+import { cssVariables } from '~/lib/styles';
+import { resolveTags, type TagDefinition, TagKind } from '~/lib/tags';
+
+interface Props {
+  tags: readonly TagDefinition[];
+  links?: boolean;
+  omit?: readonly TagDefinition[];
+}
+
+const { tags, links = true, omit = [] } = Astro.props;
+const resolvedTags = resolveTags(tags)
+  .filter(tag => !omit.some(hidden => hidden.id === tag.id))
+  .sort((left, right) => left.name.localeCompare(right.name, 'en'));
+const tagGroups = [
+  {
+    className: 'tags__types',
+    tags: resolvedTags.filter(tag => tag.kind !== TagKind.Technology),
+  },
+  {
+    className: 'tags__technologies',
+    tags: resolvedTags.filter(tag => tag.kind === TagKind.Technology),
+  },
+].filter(group => group.tags.length > 0);
+---
+
+{tagGroups.length > 0 && (
+  <div class="tags inline-flex flex-wrap justify-end gap-3 max-summary:justify-start">
+    {tagGroups.map(group => (
+      <div class:list={['inline-flex flex-wrap gap-1.5', group.className]}>
+        {group.tags.map(tag => {
+          const tagClasses =
+            'tag-link resource-chip relative';
+          const content = (
+            <>
+              {tag.icon && (
+                <Icon
+                  class="size-4 flex-none text-tag stroke-icon"
+                  name={tag.icon}
+                  aria-hidden="true"
+                />
+              )}
+              {links ? (tag.linkLabel ?? tag.name) : tag.name}
+            </>
+          );
+
+          return links ? (
+            <a
+              class={tagClasses}
+              href={Routes.topic(tag.id)}
+              style={cssVariables({ '--tag-color': tag.color })}
+            >
+              {content}
+            </a>
+          ) : (
+            <span class={tagClasses} style={cssVariables({ '--tag-color': tag.color })}>
+              {content}
+            </span>
+          );
+        })}
+      </div>
+    ))}
+    </div>
+)}

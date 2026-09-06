@@ -1,0 +1,74 @@
+---
+import { Icon } from 'astro-icon/components';
+
+import Routes from '~/lib/routes';
+import ThemeToggle from './ThemeToggle.astro';
+
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const isHome = pathname === '/';
+const isMods = pathname.startsWith('/mods');
+const isProjects = pathname.startsWith('/projects');
+
+const navItems = [
+  { label: 'Home', href: Routes.home(), isCurrent: isHome },
+  { label: 'Projects', href: Routes.projects(), isCurrent: isProjects },
+  { label: 'Mods', href: Routes.mods(), isCurrent: isMods },
+  { label: 'About', href: Routes.about(), isCurrent: pathname === '/about' },
+];
+---
+
+<nav
+  class="site-nav sticky top-0 z-8 w-full border-b"
+  aria-label="Primary navigation"
+  data-site-nav
+  data-home-nav={isHome ? '' : undefined}
+  data-at-top={isHome ? '' : undefined}
+>
+  <div
+    class="site-container grid min-h-17 grid-cols-[1fr_auto_auto] items-center gap-[clamp(1.25rem,4vw,3rem)] py-2.5 max-nav:grid-cols-[1fr_auto] max-nav:gap-x-4 max-nav:gap-y-1 max-nav:py-1.5"
+  >
+    <a
+      class="site-nav__brand inline-flex w-fit items-center font-brand text-base font-bold tracking-tighter text-text no-underline"
+      href={Routes.home()}
+      >Maciej Mieńko<span class="ml-2 font-sans text-xs font-normal tracking-normal text-text-muted max-identity:hidden"
+        >/ Maxie</span
+      ></a
+    >
+
+    <div
+      class="site-nav__links flex items-center gap-[clamp(1rem,3vw,1.75rem)] max-nav:col-span-full max-nav:row-start-2 max-nav:px-1 max-identity:w-full max-identity:justify-between max-identity:gap-1"
+    >
+      {navItems.map(item => (
+        <a
+          class="relative inline-flex min-h-10 items-center py-2 font-brand text-base font-semibold text-text-muted max-identity:text-xs no-underline aria-[current=page]:text-text aria-[current=page]:after:absolute aria-[current=page]:after:right-0 aria-[current=page]:after:bottom-1 aria-[current=page]:after:left-0 aria-[current=page]:after:h-0.5 aria-[current=page]:after:bg-accent-secondary aria-[current=page]:after:content-[''] hover:text-text"
+          href={item.href}
+          aria-current={item.isCurrent ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </div>
+
+    <div class="flex items-center gap-1.5">
+      <a
+        class="inline-grid size-10 place-items-center text-text-muted no-underline hover:-translate-y-0.5 hover:bg-surface-strong hover:text-text active:translate-y-px active:scale-pressed"
+        href="https://github.com/MrMaxie"
+        target="_blank"
+        rel="noopener"
+        aria-label="Maciej on GitHub"
+      >
+        <Icon class="size-4.5 stroke-icon" name="tabler:brand-github" aria-hidden="true" />
+      </a>
+      <a
+        class="inline-grid size-10 place-items-center text-text-muted no-underline hover:-translate-y-0.5 hover:bg-surface-strong hover:text-text active:translate-y-px active:scale-pressed"
+        href="https://www.linkedin.com/in/maciej-mie%C5%84ko-b0200b190/"
+        target="_blank"
+        rel="noopener"
+        aria-label="Maciej on LinkedIn"
+      >
+        <Icon class="size-4.5 stroke-icon" name="tabler:brand-linkedin" aria-hidden="true" />
+      </a>
+      <ThemeToggle />
+    </div>
+  </div>
+</nav>

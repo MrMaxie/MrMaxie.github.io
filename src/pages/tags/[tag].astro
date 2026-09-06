@@ -1,0 +1,66 @@
+---
+import { Icon } from 'astro-icon/components';
+
+import ModCard from '~/components/mods/ModCard.astro';
+import ProjectCard from '~/components/projects/ProjectCard.astro';
+import CatalogHeader from '~/components/ui/CatalogHeader.astro';
+import BaseLayout from '~/layouts/Base.astro';
+import { getGame } from '~/lib/mods';
+import Routes from '~/lib/routes';
+import { cssVariables } from '~/lib/styles';
+import { getTopicGroups, type TopicGroup } from '~/lib/topics';
+
+export const getStaticPaths = async () =>
+  (await getTopicGroups()).map(topic => ({
+    params: { tag: topic.slug },
+    props: { topic },
+  }));
+
+interface Props {
+  topic: TopicGroup;
+}
+const { topic } = Astro.props;
+const resourceCount = topic.projects.length + topic.mods.length;
+---
+
+<BaseLayout
+  smallerHeader
+  title={[topic.name, 'Topics']}
+  description={`${topic.description} Browse ${resourceCount} related ${resourceCount === 1 ? 'resource' : 'resources'}.`}
+  crumbs={[{ label: 'Topics', href: Routes.topics() }]}
+>
+  <div class="topic-page" style={cssVariables({ '--topic-color': topic.color })}>
+    <CatalogHeader
+      eyebrow="Topic"
+      title={topic.name}
+      description={topic.description}
+      count={`${resourceCount} ${resourceCount === 1 ? 'resource' : 'resources'}`}
+      actions={[{ href: Routes.topics(), label: 'Browse all topics' }]}
+      color={topic.color}
+    />
+
+    {topic.projects.length > 0 && (
+            <section class="mt-section-gap" aria-labelledby="topic-projects">
+                <header class="mb-4 flex items-center gap-2.5 px-5 text-topic max-phone:px-2">
+                    <Icon class="size-5.5 stroke-subtle" name="tabler:layout-grid" aria-hidden="true" />
+                    <h2 class="text-xl leading-snug" id="topic-projects">Projects</h2>
+                </header>
+                <div class="grid grid-cols-2 gap-4 max-content:grid-cols-1">
+                    {topic.projects.map(project => <ProjectCard project={project} headingLevel="h3" />)}
+                </div>
+            </section>
+        )}
+
+    {topic.mods.length > 0 && (
+            <section class="mt-section-gap" aria-labelledby="topic-mods">
+                <header class="mb-4 flex items-center gap-2.5 px-5 text-topic max-phone:px-2">
+                    <Icon class="size-5.5 stroke-subtle" name="tabler:device-gamepad-2" aria-hidden="true" />
+                    <h2 class="text-xl leading-snug" id="topic-mods">Mods</h2>
+                </header>
+                <div class="grid grid-cols-2 gap-4 max-content:grid-cols-1">
+                    {topic.mods.map(mod => <ModCard mod={mod} game={getGame(mod.game)} />)}
+                </div>
+            </section>
+        )}
+  </div>
+</BaseLayout>

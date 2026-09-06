@@ -1,0 +1,38 @@
+---
+import { Icon } from 'astro-icon/components';
+import Routes from '~/lib/routes';
+import AuthorIdentity from './AuthorIdentity.astro';
+import Portrait from './Portrait.astro';
+
+interface Props {
+  showAboutLink?: boolean;
+}
+const { showAboutLink = true } = Astro.props;
+---
+
+<header
+  class="personal-hero relative isolate mx-auto grid w-full max-w-264 grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] items-center gap-12 py-10 max-tablet:grid-cols-1 max-tablet:gap-0 max-tablet:pt-4"
+  data-hero
+  transition:name="author-hero"
+>
+  <div class="relative z-1 max-tablet:order-2" data-hero-reveal>
+    <p class="mb-5 text-base text-accent">Software developer</p>
+    <AuthorIdentity />
+    <p class="mt-8 max-w-[43ch] text-xl leading-relaxed text-text-muted max-phone:text-lg">
+      I build software, from developer tools to games. Understanding the mechanism is often the part I enjoy most.
+    </p>
+    <a
+      class:list={['context-link mt-7 inline-flex min-h-10 items-center gap-3 text-base text-text', { invisible: !showAboutLink }]}
+      href={Routes.about()}
+      aria-hidden={!showAboutLink ? 'true' : undefined}
+      tabindex={!showAboutLink ? -1 : undefined}
+      >A little about me <Icon name="tabler:arrow-right" class="size-4" aria-hidden="true" /></a
+    >
+  </div>
+  <div
+    class="author-portrait min-w-0 w-full max-w-92 justify-self-end max-tablet:max-w-80 max-tablet:justify-self-center"
+    data-hero-visual
+  >
+    <Portrait />
+  </div>
+</header>

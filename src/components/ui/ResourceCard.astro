@@ -1,0 +1,76 @@
+---
+import ProjectMark from '~/components/projects/ProjectMark.astro';
+import InteractiveSpotlight from '~/components/ui/InteractiveSpotlight.astro';
+import ResourceArrow from '~/components/ui/ResourceArrow.astro';
+import ResourceMetadata from '~/components/ui/ResourceMetadata.astro';
+import Tags from '~/components/ui/Tags.astro';
+import type { ResourceData, TagDefinition } from '~/lib/content';
+import { cssVariables } from '~/lib/styles';
+import ResourceLinks from './ResourceLinks.astro';
+
+interface Props {
+  resource: ResourceData & { slug: string };
+  color: string;
+  href: string;
+  eyebrow?: { label: string; href: string };
+  omitTags?: readonly TagDefinition[];
+  variant?: 'full' | 'row' | 'featured';
+  headingLevel?: 'h2' | 'h3';
+  showActions?: boolean;
+}
+
+const {
+  resource,
+  color,
+  href,
+  eyebrow,
+  omitTags = [],
+  variant = 'full',
+  headingLevel = 'h2',
+  showActions = variant === 'full',
+} = Astro.props;
+const Heading = headingLevel;
+const isRow = variant === 'row' || variant === 'featured';
+---
+
+<article
+  id={resource.slug}
+  class:list={['project-resource-card group relative isolate flex h-full min-w-0 flex-col border-line p-6', { 'border bg-surface': !isRow, 'border-b': isRow }]}
+  data-project-card
+  data-page-reveal
+  data-interactive-surface
+  data-spotlight-surface
+  style={cssVariables({
+    '--project-color': color,
+    '--spotlight-color': color,
+    '--resource-color': color,
+  })}
+>
+  <InteractiveSpotlight />
+  <div class="mb-5 flex min-h-15 items-center gap-4">
+    <ProjectMark project={resource} showFallback />
+    <div class="min-w-0 flex-1">
+      {eyebrow && <a class="relative z-4 mb-1 block w-fit font-mono text-xs text-text-muted" href={eyebrow.href}>{eyebrow.label}</a>}
+      <Heading class:list={['text-2xl leading-tight tracking-tight', { truncate: variant === 'featured' }]}
+        ><a class="project-resource-card__link text-inherit no-underline focus-visible:outline-none" href={href}
+          >{resource.name}</a
+        ></Heading
+      >
+      <ResourceMetadata version={resource.version} license={resource.license} access={resource.access} />
+    </div>
+    <ResourceArrow class="relative z-1 flex-none" />
+  </div>
+  <p
+    class:list={['max-w-[68ch] text-text-muted', { 'line-clamp-4 h-card-summary flex-none leading-relaxed': variant === 'featured' }]}
+  >
+    {resource.summary}
+  </p>
+  <div
+    class="project-resource-card__footer relative z-4 mt-auto pt-5 pointer-events-none [&_a]:pointer-events-auto [&_.tags]:justify-start"
+  >
+    <div class="flex flex-wrap items-start justify-between gap-3">
+      <Tags tags={resource.tags} omit={omitTags} />
+      {showActions && resource.links.length > 0 && <div class="ml-auto max-sm:ml-0 max-sm:w-full"><ResourceLinks links={resource.links} name={resource.name} compact /></div>}
+    </div>
+  </div>
+</article>

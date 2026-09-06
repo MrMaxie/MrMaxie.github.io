@@ -1,0 +1,26 @@
+---
+import ResourceCard from '~/components/ui/ResourceCard.astro';
+import { Tags } from '~/data/tags';
+import type { Game, Mod } from '~/lib/mods';
+import Routes from '~/lib/routes';
+
+interface Props {
+  game: Game;
+  mod: Mod;
+  showLinks?: boolean;
+  showGame?: boolean;
+  compact?: boolean;
+}
+const { game, mod, showLinks = true, showGame = true, compact = false } = Astro.props;
+---
+
+<ResourceCard
+  resource={mod}
+  color={game.color}
+  href={Routes.mod(mod.slug)}
+  eyebrow={showGame ? {label: game.name, href: Routes.modGame(game.id)} : undefined}
+  omitTags={[Tags.Gamedev]}
+  showActions={showLinks}
+  variant={compact ? 'row' : 'full'}
+  headingLevel="h3"
+/>

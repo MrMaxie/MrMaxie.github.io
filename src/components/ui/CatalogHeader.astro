@@ -1,0 +1,60 @@
+---
+import { Icon } from 'astro-icon/components';
+import { cssVariables } from '~/lib/styles';
+
+type HeaderAction = {
+  href: string;
+  label: string;
+};
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  count?: string;
+  actions?: HeaderAction[];
+  color?: string;
+}
+
+const { eyebrow, title, description, count, actions = [], color = 'var(--accent)' } = Astro.props;
+---
+
+<header
+  class="catalog-heading grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] items-center gap-8 border-b border-line px-0 pt-5 pb-10 max-tablet:grid-cols-1 max-tablet:gap-4"
+  data-page-reveal
+  style={cssVariables({ '--catalog-color': color })}
+>
+  <div>
+    {eyebrow && (
+      <p class="mb-2 font-mono text-xs font-semibold tracking-wider text-catalog uppercase">
+        {eyebrow}
+      </p>
+    )}
+    <h1 class="max-w-[14ch] text-detail-title leading-tight">{title}</h1>
+    {count && <span class="mt-3.5 block font-mono text-xs text-catalog">{count}</span>}
+  </div>
+  {(description || actions.length > 0) && (
+    <div>
+      {description && (
+        <p class="m-0 max-w-172 text-[clamp(1rem,1.5vw,1.12rem)] text-text-muted">{description}</p>
+      )}
+      {actions.length > 0 && (
+        <nav class="mt-3 flex flex-wrap gap-x-5.5 gap-y-3" aria-label={`${title} resources`}>
+          {actions.map(action => (
+            <a
+              class="catalog-action context-link group inline-flex min-h-10 items-center gap-2 font-semibold text-text no-underline"
+              href={action.href}
+            >
+              {action.label}
+              <Icon
+                class="size-4 stroke-icon transition-transform duration-220 group-hover:translate-x-1 group-focus-visible:translate-x-1"
+                name="tabler:arrow-right"
+                aria-hidden="true"
+              />
+            </a>
+          ))}
+        </nav>
+      )}
+    </div>
+  )}
+</header>

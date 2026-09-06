@@ -1,0 +1,19 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<span
+  class:list={[
+    'resource-arrow grid size-6.5 flex-none place-items-center border border-line',
+    className,
+  ]}
+  aria-hidden="true"
+>
+  <Icon class="size-4 stroke-arrow" name="tabler:arrow-up-right" />
+</span>

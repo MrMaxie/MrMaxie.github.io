@@ -1,0 +1,13 @@
+---
+import type { ComponentProps } from 'astro/types';
+import ResourceCard from '~/components/ui/ResourceCard.astro';
+import type { Project } from '~/lib/projects';
+import Routes from '~/lib/routes';
+
+interface Props extends Pick<ComponentProps<typeof ResourceCard>, 'variant' | 'headingLevel' | 'showActions'> {
+  project: Project;
+}
+const { project, ...props } = Astro.props;
+---
+
+<ResourceCard resource={project} color={project.color} href={Routes.project(project.slug)} {...props} />

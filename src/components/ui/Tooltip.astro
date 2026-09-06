@@ -1,0 +1,35 @@
+---
+interface Props {
+  text: string;
+}
+const { text } = Astro.props;
+const id = `tooltip-${crypto.randomUUID()}`;
+---
+
+<span class="metadata-tooltip relative inline-flex" data-tooltip>
+  <button
+    class="inline-flex cursor-help items-center gap-1 border-0 bg-transparent p-0 text-inherit"
+    type="button"
+    aria-describedby={id}
+  >
+    <slot />
+  </button>
+  <span class="metadata-tooltip__content" id={id} role="tooltip">{text}</span>
+</span>
+<script>
+document.addEventListener('keydown', event => {
+  if (event.key !== 'Escape') return;
+  for (const tooltip of document.querySelectorAll<HTMLElement>('[data-tooltip]')) tooltip.dataset.dismissed = '';
+});
+function restoreTooltip(event: Event) {
+  if (!(event.target instanceof Element)) return;
+  const tooltip = event.target.closest<HTMLElement>('[data-tooltip]');
+  if (
+    tooltip &&
+    (!(event instanceof MouseEvent) || !(event.relatedTarget instanceof Node) || !tooltip.contains(event.relatedTarget))
+  )
+    delete tooltip.dataset.dismissed;
+}
+document.addEventListener('pointerover', restoreTooltip);
+document.addEventListener('focusin', restoreTooltip);
+</script>

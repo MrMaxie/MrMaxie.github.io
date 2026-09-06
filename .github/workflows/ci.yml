@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [master, feat/2.0]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: jdx/mise-action@3c2e0cf82a5b2e5249f0d3635a4d83d0ae861518 # v4
+      - run: nub ci
+      - run: just ci
+      - run: nub exec playwright install --with-deps chromium
+      - name: Accessibility and interaction audit
+        id: accessibility
+        run: nub --test --experimental-strip-types tests/browser.audit.ts
+        env:
+          AUDIT_OUTPUT_DIR: ${{ runner.temp }}/site-audits
+      - name: Lighthouse mobile and desktop gates
+        if: ${{ !cancelled() && steps.accessibility.outcome != 'skipped' }}
+        run: nub --experimental-strip-types scripts/lighthouse-audit.ts
+        env:
+          AUDIT_OUTPUT_DIR: ${{ runner.temp }}/site-audits
+      - name: Preserve audit reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: site-audits
+          path: ${{ runner.temp }}/site-audits
+          if-no-files-found: warn
+          retention-days: 14

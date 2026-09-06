@@ -1,0 +1,10 @@
+---
+import AuthorHero from './AuthorHero.astro';
+
+interface Props {
+  smaller?: boolean;
+}
+const { smaller = false } = Astro.props;
+---
+
+{!smaller && <AuthorHero />}
