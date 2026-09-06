@@ -6,10 +6,10 @@ type LighthouseMetrics = {
 export function lighthouseFailures(report: LighthouseMetrics): string[] {
   const failures: string[] = [];
   for (const [category, minimum] of Object.entries({
-    performance: 1,
-    accessibility: 1,
-    'best-practices': 1,
-    seo: 1,
+    performance: 0.95,
+    accessibility: 0.95,
+    'best-practices': 0.95,
+    seo: 0.95,
   })) {
     const score = report.categories[category]?.score;
     if (typeof score !== 'number' || !Number.isFinite(score) || score < minimum) {

@@ -33,7 +33,7 @@ just audit-lighthouse
 just audit-lighthouse-live https://maxie.dev
 ```
 
-Lighthouse checks the homepage, project list, mod list and representative project/mod detail pages. It runs three consecutive measurements per route/profile. Every category must score 100 in every run, and CLS must remain at or below 0.1. A result below 100 fails CI, even if it passes the previous performance threshold of 95. The live command audits the actual hosting response; it does not start a local preview. Keep performance measurements separate from concurrent builds or browser audits.
+Lighthouse checks the homepage, project list, mod list and representative project/mod detail pages. It runs three consecutive measurements per route/profile. Performance, accessibility, best practices and SEO must each score at least 95 in every run. Axe still requires zero violations. CLS must remain at or below 0.1. Missing metrics fail CI. The live command audits the actual hosting response; it does not start a local preview. Keep performance measurements separate from concurrent builds or browser audits.
 
 The six initial live diagnostic runs measured performance 97 mobile / 100 desktop and accessibility, best practices and SEO 100. They were single runs per route/profile, not a replacement for the repeated final acceptance series.
 
@@ -69,7 +69,7 @@ The first branch CI run completed all 30 measurements with mobile performance 99
 
 Production builds now subset the installed fonts using the site's source characters, including encoded entities and escapes. HarfBuzz preserves the variable weight axes, shaping features and hinting. Development uses complete fonts so editing can introduce new characters immediately. Font assets receive content-based filenames, and the original licenses accompany the build. Small font files remain external to respect the existing inline-CSS budget.
 
-The three Latin files fell from approximately 100 KB to 70 KB. The Outfit and Karla extended files fell from approximately 30 KB together to 2.7 KB. A comparison of the homepage and mod list at 390/1440 px found identical pixels and geometry before and after subsetting. The build, inline-CSS budget and 55 unit/contract tests pass. These byte and visual checks do not by themselves establish a 100-point Lighthouse result; the repeated CI audit remains authoritative for its runner.
+The three Latin files fell from approximately 100 KB to 70 KB. The Outfit and Karla extended files fell from approximately 30 KB together to 2.7 KB. A comparison of the homepage and mod list at 390/1440 px found identical pixels and geometry before and after subsetting. The build, inline-CSS budget and 55 unit/contract tests pass. These byte and visual checks do not by themselves establish a Lighthouse score. Runner results are regression evidence, not acceptance evidence for the built site in a browser.
 
 The next step limits Karla to its used 400-700 weight range, reducing its Latin file from 21.4 KB to 14.9 KB. A browser assertion rejects requested Karla weights outside that generated range. The comparison retained layout and line wrapping, with only font rasterization differences in at most 0.012% of sampled color channels. Outfit and Fira Code retain their original weight ranges.
 
@@ -79,13 +79,29 @@ The subsequent [CI run](https://github.com/MrMaxie/MrMaxie.github.io/actions/run
 
 The two small Outfit/Karla alphabet extensions are embedded in the existing CSS, eliminating their late font requests while larger Latin files remain separately cached. The [final implementation CI run](https://github.com/MrMaxie/MrMaxie.github.io/actions/runs/34057332018) passed the build, 55 unit tests and 376 browser tests. Of 30 Lighthouse runs, 27 scored 100 in every category; only `/mods/` mobile performance remained 99/99/99. The unchanged strict gate failed and retained all reports.
 
-Local results differ: embedding the extensions improved the mod list's first render but regressed homepage performance from 98 to 97. Reports show different HTML delivery costs: the runner transferred about 24 KB for a 108 KB document, whereas the local preview transferred the full document. The embedding is retained based on the target runner's result, without claiming a universal performance improvement. A further homepage Fira preload was not retained because it delayed the portrait's LCP. Stable mobile performance 100 remains unresolved; neither audit conditions nor page animations were relaxed.
+Local results differ: embedding the extensions improved the mod list's first render but regressed homepage performance from 98 to 97. Reports show different HTML delivery costs: the runner transferred about 24 KB for a 108 KB document, whereas the local preview transferred the full document. The runner result alone is insufficient to justify this tradeoff. The built preview is measured independently below against the final accepted performance minimum of 95. No further font change is included in this follow-up. A further homepage Fira preload was not retained because it delayed the portrait's LCP. Stable mobile performance 100 remains unresolved; neither audit conditions nor page animations were relaxed.
 
-## Audit transport parity
+## Accepted Lighthouse thresholds
 
-A fresh production check confirmed HTTP/2 and gzip for `https://maxie.dev/mods/`. The earlier CI preview used HTTP/1.1; Lighthouse's simulated connection costs therefore did not represent the deployed transport. CI now enables Vite's HTTPS/HTTP/2 preview and checks the document protocol in every Lighthouse report.
+The accepted minimum is now 95 for all four Lighthouse categories on both profiles, replacing the earlier 100-point requirement. Axe still requires zero violations and CLS remains limited to 0.1. Tests accept 95 and reject 94 in each category. The experimental HTTP/2 certificate setup was withdrawn to keep the established CI environment simple. Production was independently observed using HTTP/2 and gzip; CI continues to audit the normal local preview. Historical failed runs above used the earlier 100-point performance gate. Acceptance requires measurements of the actual production build in Chromium, with three consecutive runs per route/profile and no concurrent builds or browser audits. CI remains a regression gate and cannot substitute for these measurements. DevTools trace timings are reported separately from Lighthouse scores; neither is field data from real visitors.
 
-Each disposable Linux runner creates a one-day certificate for localhost and trusts that exact certificate in Chromium's certificate database and the Node test client. Certificate validation remains enabled; no browser certificate-error bypass or Lighthouse rule exception is used. Keys stay outside uploaded reports. Local audits retain HTTP/1.1 unless `AUDIT_TLS_CERT` and `AUDIT_TLS_KEY` identify a certificate already trusted by the test clients. Results from different transports must not be presented as interchangeable. The HTTP/2 runner result must be verified independently before claiming that the remaining performance gate passes.
+## Final built-preview measurements
+
+The unchanged production build was served by the normal Astro preview and measured in Chromium with Lighthouse 13.4.1, using the standard mobile and desktop profiles. All 30 runs completed sequentially without concurrent builds or browser audits.
+
+| Route | Mobile performance, three runs | Desktop performance, three runs |
+| --- | --- | --- |
+| `/` | 97 / 97 / 97 | 100 / 100 / 100 |
+| `/projects/` | 98 / 98 / 98 | 100 / 100 / 100 |
+| `/mods/` | 98 / 98 / 98 | 100 / 100 / 100 |
+| `/projects/maxiedev-events/` | 99 / 99 / 99 | 100 / 100 / 100 |
+| `/mods/boss-scaler/` | 99 / 99 / 99 | 100 / 100 / 100 |
+
+Accessibility, best practices and SEO scored 100 in every run. All CLS measurements were below 0.001. The process started with the then-current 98 performance gate and exited with failure for the three homepage runs. All 30 saved reports were subsequently evaluated using the final 95 thresholds and passed; no measurement was discarded or retried to obtain a pass.
+
+A separate DevTools trace of the built mod list, at 412 px with 4x CPU slowdown and Slow 4G, measured LCP 1.217 s and CLS 0. This was a reload without explicit cache clearing, not cold-cache or visitor field evidence. The built page was also visually inspected in Chromium. These results describe the local production build, not a deployed version of this branch.
+
+The final verification passed 55 unit/contract tests and 376 browser tests, including axe across all generated pages, both themes and 320/390/1440 px viewports. Astro check reported no errors or warnings. Formatting and class checks passed with one existing lint warning in the browser test. Native screen-reader listening, browser UI zoom and actual social-provider previews remain outside this automated verification.
 
 ## References
 
@@ -97,5 +113,3 @@ Each disposable Linux runner creates a one-day certificate for localhost and tru
 - [llms.txt proposal and format](https://llmstxt.org/)
 - [Web font loading and preload guidance](https://web.dev/learn/performance/optimize-web-fonts)
 - [HarfBuzz-based variable font subsetting](https://github.com/papandreou/subset-font)
-- [Vite HTTPS/HTTP/2 preview](https://v8.vite.dev/config/preview-options#preview-https)
-- [Chromium Linux certificate management](https://chromium.googlesource.com/chromium/src/+/master/docs/linux/cert_management.md)

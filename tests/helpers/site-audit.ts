@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, readdir, readFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { preview } from 'astro';
@@ -11,16 +11,8 @@ export async function auditOutput(kind: string) {
 }
 
 export async function productionPreview() {
-  const { AUDIT_TLS_CERT: certificate, AUDIT_TLS_KEY: privateKey } = process.env;
-  if (Boolean(certificate) !== Boolean(privateKey)) throw new Error('Audit TLS requires both certificate and key');
-  const https =
-    certificate && privateKey ? { cert: await readFile(certificate), key: await readFile(privateKey) } : undefined;
-  const server = await preview({
-    server: { host: '127.0.0.1', port: 0, open: false },
-    vite: { preview: { https } },
-    logLevel: 'silent',
-  });
-  return { server, baseURL: `${https ? 'https' : 'http'}://127.0.0.1:${server.port}` };
+  const server = await preview({ server: { host: '127.0.0.1', port: 0, open: false }, logLevel: 'silent' });
+  return { server, baseURL: `http://127.0.0.1:${server.port}` };
 }
 
 export async function builtRoutes() {

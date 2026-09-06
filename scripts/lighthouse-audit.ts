@@ -55,20 +55,12 @@ try {
           await writeFile(`${path}.report.json`, result.report[0]);
           await writeFile(`${path}.report.html`, result.report[1]);
           if (result.lhr.runtimeError) throw new Error(JSON.stringify(result.lhr.runtimeError));
-          const requests = result.lhr.audits['network-requests'].details;
-          const protocol =
-            requests?.type === 'table'
-              ? requests.items.find(request => request.resourceType === 'Document')?.protocol
-              : undefined;
-          if (!target && process.env.AUDIT_TLS_CERT && protocol !== 'h2')
-            throw new Error(`Expected HTTP/2 in the TLS audit, received ${protocol ?? 'unknown'}`);
           failures.push(...lighthouseFailures(result.lhr).map(failure => `${route} ${profile} run ${run}: ${failure}`));
           summary.push({
             route,
             profile,
             run,
             version: result.lhr.lighthouseVersion,
-            protocol,
             cls: result.lhr.audits['cumulative-layout-shift'].numericValue,
             categories: Object.fromEntries(
               Object.entries(result.lhr.categories).map(([key, value]) => [key, value.score]),

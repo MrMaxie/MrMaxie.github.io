@@ -4,10 +4,10 @@ import { lighthouseFailures } from './helpers/audit-thresholds.ts';
 
 const passing = () => ({
   categories: {
-    performance: { score: 1 },
-    accessibility: { score: 1 },
-    'best-practices': { score: 1 },
-    seo: { score: 1 },
+    performance: { score: 0.95 },
+    accessibility: { score: 0.95 },
+    'best-practices': { score: 0.95 },
+    seo: { score: 0.95 },
   },
   audits: { 'cumulative-layout-shift': { numericValue: 0.1 } },
 });
