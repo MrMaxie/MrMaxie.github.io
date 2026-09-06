@@ -74,6 +74,7 @@ const DevOps = createTag({
 
 const Go = createTag({
   name: 'Go',
+  linkLabel: 'Go language',
   color: '#79c9ff',
   icon: 'tabler:brand-golang',
   description: 'Local services, command-line tools, and terminal interfaces written in Go.',

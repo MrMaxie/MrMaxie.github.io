@@ -22,7 +22,8 @@ export default defineConfig({
       styles: ['normal'],
       subsets: ['latin', 'latin-ext'],
       formats: ['woff2'],
-      fallbacks: ['sans-serif'],
+      optimizedFallbacks: false,
+      fallbacks: ['Outfit Fallback', 'sans-serif'],
       options: {
         package: '@fontsource-variable/outfit',
         file: 'index.css',
@@ -36,7 +37,8 @@ export default defineConfig({
       styles: ['normal'],
       subsets: ['latin', 'latin-ext'],
       formats: ['woff2'],
-      fallbacks: ['sans-serif'],
+      optimizedFallbacks: false,
+      fallbacks: ['Karla Fallback', 'sans-serif'],
       options: {
         package: '@fontsource-variable/karla',
         file: 'index.css',
@@ -59,6 +61,7 @@ export default defineConfig({
   ],
   build: {
     assets: 'static',
+    inlineStylesheets: 'always',
   },
   prefetch: {
     prefetchAll: true,

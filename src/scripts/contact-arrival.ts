@@ -1,4 +1,4 @@
-import { animate } from 'motion';
+import { animate } from 'motion/mini';
 
 import { prefersReducedMotion, registerPageSetup } from './page-lifecycle';
 

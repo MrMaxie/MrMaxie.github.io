@@ -163,11 +163,14 @@
   transform: translate(0.12rem, -0.12rem);
 }
 
+.site-nav a[aria-label],
 [data-theme-toggle] {
   transition:
     background-color 160ms ease,
     color 160ms ease,
-    transform 160ms ease;
+    transform 160ms ease,
+    translate 160ms ease,
+    scale 160ms ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -213,6 +216,10 @@
 .project-resource-card:focus-within .project-resource-card__brand {
   filter: grayscale(0) saturate(1) contrast(1);
   opacity: 1;
+}
+
+.project-resource-card__link {
+  overflow-wrap: anywhere;
 }
 
 .project-resource-card__link::after {
@@ -432,7 +439,7 @@
 }
 .description mark {
   background: transparent;
-  color: var(--project-color, var(--accent));
+  color: color-mix(in srgb, var(--project-color, var(--accent)) 65%, var(--text));
   font-weight: 600;
 }
 .description u {
@@ -492,7 +499,15 @@
 }
 
 :root:not([data-theme="dark"]) .description mark {
-  color: color-mix(in srgb, var(--project-color, var(--accent)) 60%, #171419);
+  color: color-mix(in srgb, var(--project-color, var(--accent)) 45%, #171419);
+}
+
+:root:not([data-theme="dark"]) .catalog-heading {
+  --catalog-text-color: color-mix(in srgb, var(--catalog-color) 45%, var(--text));
+}
+
+:root[data-theme="dark"] .catalog-heading {
+  --catalog-text-color: color-mix(in srgb, var(--catalog-color) 85%, var(--text));
 }
 
 .resource-neighbors .project-resource-card {

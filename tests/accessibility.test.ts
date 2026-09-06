@@ -39,7 +39,7 @@ test('includes only real destinations in primary navigation', () => {
 test('identifies the author portrait without making it interactive', () => {
   const portrait = readSource('../src/components/site/Portrait.astro');
 
-  assert.match(portrait, /<Image[\s\S]*?src={portrait}[\s\S]*?alt="Portrait of Maciej Mieńko"/);
+  assert.match(portrait, /<Picture[\s\S]*?src={portrait}[\s\S]*?alt="Portrait of Maciej Mieńko"/);
   assert.doesNotMatch(portrait, /tabindex|role="button"|<button/);
 });
 

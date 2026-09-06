@@ -9,7 +9,7 @@ interface Props {
 const { crumbs = [] } = Astro.props;
 ---
 
-<div class="breadcrumbs -mb-4 text-sm text-text-muted" transition:name="breadcrumbs">
+<nav aria-label="Breadcrumb" class="breadcrumbs -mb-4 text-sm text-text-muted" transition:name="breadcrumbs">
   {crumbs.map(({ label, href }) =>
     href ? (
       <a
@@ -19,7 +19,7 @@ const { crumbs = [] } = Astro.props;
         {label}
       </a>
     ) : (
-      <span class="after:mx-2 after:content-['/'] last:after:content-none">{label}</span>
+      <span aria-current="page" class="after:mx-2 after:content-['/'] last:after:content-none">{label}</span>
     ),
   )}
-</div>
+</nav>

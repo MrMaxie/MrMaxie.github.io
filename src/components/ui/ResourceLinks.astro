@@ -18,7 +18,7 @@ const visibleLinks = normalizeLinks(links).filter(link => !compact || link.kind 
 ---
 
 {visibleLinks.length > 0 && <div class="project-actions relative z-3 flex flex-wrap items-center gap-2">
-  {visibleLinks.map(link => <a class="resource-chip project-action border-line text-text-muted" href={link.href} aria-label={`${name}: ${link.label}`}>
+  {visibleLinks.map(link => <a class="resource-chip project-action border-line text-text-muted" href={link.href} target="_blank" rel="noopener" aria-label={`${name}: ${link.label}`}>
     <Icon class="size-4 flex-none stroke-action" name={link.kind ? icons[link.kind] : getModLinkIcon(link.href)} aria-hidden="true" />{link.label}
   </a>)}
 </div>}

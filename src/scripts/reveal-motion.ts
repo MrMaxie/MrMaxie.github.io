@@ -1,4 +1,5 @@
-import { animate, inView } from 'motion';
+import { inView } from 'motion';
+import { animate } from 'motion/mini';
 
 import { registerPageMotion } from './page-lifecycle';
 
@@ -20,7 +21,11 @@ registerPageMotion(() => {
   const observers: Array<() => void> = [];
 
   const play = (target: HTMLElement, distance: number, duration: number, delay = 0) => {
-    const animation = animate(target, { y: [distance, 0] }, { delay, duration, ease: revealEase });
+    const animation = animate(
+      target,
+      { transform: [`translateY(${distance}px)`, 'translateY(0px)'] },
+      { delay, duration, ease: revealEase },
+    );
     animations.add(animation);
     animation.then(
       () => {

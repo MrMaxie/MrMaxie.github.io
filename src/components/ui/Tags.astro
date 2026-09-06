@@ -43,7 +43,7 @@ const tagGroups = [
                   aria-hidden="true"
                 />
               )}
-              {tag.name}
+              {links ? (tag.linkLabel ?? tag.name) : tag.name}
             </>
           );
 

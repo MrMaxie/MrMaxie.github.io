@@ -2,7 +2,7 @@ I developed a <mark>real-time 3D mapping platform</mark> that presents large spa
 
 ## GPU-rendered 3D map
 
-The browser renders the map through the GPU, with a set of **custom shaders** responsible for complex surfaces and visual effects. The rendering pipeline follows LOD principles so nearby areas can retain useful detail while distant geometry remains efficient to draw.
+The browser renders the map through the GPU, with a set of **custom shaders** responsible for complex surfaces and visual effects. The rendering pipeline adjusts the level of detail (LOD) so nearby areas retain useful detail while distant geometry remains efficient to draw.
 
 - **LOD-aware geometry:** adapt visible detail to distance and the current view.
 - **Custom shader pipeline:** render complex planes and map-specific visual effects on the GPU.

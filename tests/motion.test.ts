@@ -24,7 +24,8 @@ test('uses CSS and Motion as the animation stack', async () => {
   assert.match(siteMotion, /import '.\/interactive-surfaces'/);
   assert.match(siteMotion, /import '.\/site-nav'/);
   assert.match(siteMotion, /import '.\/contact-arrival'/);
-  assert.match(scriptSource, /import \{ animate, inView \} from 'motion'/);
+  assert.match(scriptSource, /import \{ inView \} from 'motion'/);
+  assert.match(scriptSource, /import \{ animate \} from 'motion\/mini'/);
   assert.match(scriptSource, /import \{ scroll \} from 'motion'/);
   assert.doesNotMatch(scriptSource, /\bgsap\b|ScrollTrigger|\.animate\(/);
   assert.equal(lifecycle.match(/prefers-reduced-motion/g)?.length, 1);

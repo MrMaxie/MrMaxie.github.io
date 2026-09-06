@@ -1,5 +1,14 @@
-import { readdir } from 'node:fs/promises';
+import { mkdir, mkdtemp, readdir } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { preview } from 'astro';
+
+export async function auditOutput(kind: string) {
+  if (!process.env.AUDIT_OUTPUT_DIR) return mkdtemp(join(tmpdir(), `portfolio-${kind}-audit-`));
+  const output = join(process.env.AUDIT_OUTPUT_DIR, kind);
+  await mkdir(output, { recursive: true });
+  return output;
+}
 
 export async function productionPreview() {
   const server = await preview({ server: { host: '127.0.0.1', port: 0, open: false }, logLevel: 'silent' });
@@ -14,16 +23,3 @@ export async function builtRoutes() {
     .map(file => `/${file.replace(/index\.html$/, '')}`)
     .sort();
 }
-
-export const sampleRoutes = [
-  '/',
-  '/about/',
-  '/projects/',
-  '/mods/',
-  '/projects/maxiedev-events/',
-  '/mods/boss-scaler/',
-  '/mods/daedalian-keys/',
-  '/projects/free-tray-games/',
-  '/tags/',
-  '/tags/typescript/',
-];

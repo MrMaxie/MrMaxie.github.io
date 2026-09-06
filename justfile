@@ -24,15 +24,19 @@ check:
 build:
   nub exec astro build
 
-# Install the browser used by the optional production audits.
+# Render the editable HTML social banner with the installed Chromium browser.
+social-banner:
+  nub --experimental-strip-types scripts/social-banner.ts
+
+# Install the browser used by production audits.
 audit-setup:
   nub exec playwright install chromium
 
-# Findings fail this audit without changing the existing CI gate.
+# Build and audit all generated pages in both themes and viewport sizes.
 audit-browser: build
   nub --test --experimental-strip-types tests/browser.audit.ts
 
-# Three runs per route/profile; reports stay on this machine.
+# Three sequential runs per route/profile; every run must meet the quality gates.
 audit-lighthouse: build
   nub --experimental-strip-types scripts/lighthouse-audit.ts
 

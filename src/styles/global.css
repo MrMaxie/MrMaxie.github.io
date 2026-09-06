@@ -12,6 +12,27 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
+/* Latin metrics from the installed WOFF2 files, matched to Arial.
+   The extended subset's average width overestimates English text.
+   Round Outfit's width down to avoid a fractional-pixel heading wrap. */
+@font-face {
+  font-family: "Outfit Fallback";
+  src: local("Arial");
+  size-adjust: 99%;
+  ascent-override: 101.0101%;
+  descent-override: 26.2626%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Karla Fallback";
+  src: local("Arial");
+  size-adjust: 102.4%;
+  ascent-override: 89.5508%;
+  descent-override: 24.6094%;
+  line-gap-override: 0%;
+}
+
 @theme inline {
   --color-*: initial;
   --color-transparent: transparent;
@@ -30,7 +51,7 @@
   --color-accent-secondary: var(--accent-secondary);
   --color-spark: var(--spark);
   --color-focus: var(--focus);
-  --color-catalog: var(--catalog-color);
+  --color-catalog: var(--catalog-text-color, var(--catalog-color));
   --color-mod: var(--mod-color);
   --color-project: var(--project-color);
   --color-tag: var(--tag-color, var(--text-muted));
@@ -248,9 +269,9 @@ p {
   *::after {
     scroll-behavior: auto;
     /* biome-ignore lint/complexity/noImportantStyles: The system preference must override component-specific transitions. */
-    transition-duration: 0.01ms !important;
+    transition-duration: 0s !important;
     /* biome-ignore lint/complexity/noImportantStyles: The system preference must override component-specific animations. */
-    animation-duration: 0.01ms !important;
+    animation-duration: 0s !important;
     /* biome-ignore lint/complexity/noImportantStyles: The system preference must override repeating animations. */
     animation-iteration-count: 1 !important;
   }

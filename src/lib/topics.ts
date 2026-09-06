@@ -7,6 +7,7 @@ export type TopicGroup = {
   description: string;
   icon?: string;
   name: string;
+  linkLabel?: string;
   mods: Mod[];
   projects: Project[];
   slug: string;

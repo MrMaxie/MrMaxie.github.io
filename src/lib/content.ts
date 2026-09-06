@@ -12,6 +12,7 @@ export type GameId = (typeof GameId)[keyof typeof GameId];
 export interface TagDefinition {
   readonly id: string;
   readonly name: string;
+  readonly linkLabel?: string;
   readonly color: string;
   readonly description: string;
   readonly icon?: string;
