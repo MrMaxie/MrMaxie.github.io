@@ -17,6 +17,10 @@ test('public identity links the name, aliases, profiles and website to one perso
     assert.equal(person?.name, 'Maciej Mieńko');
     assert.equal(person?.['@id'], 'https://maxie.dev/#person');
     assert.deepEqual(person?.alternateName, ['Maxie', 'MrMaxie']);
+    assert.equal(
+      person?.description,
+      'Software developer focused on developer tools, local infrastructure, and technically unusual problems.',
+    );
     assert.deepEqual(person?.sameAs, [
       'https://github.com/MrMaxie',
       'https://www.linkedin.com/in/maciej-mie%C5%84ko-b0200b190/',

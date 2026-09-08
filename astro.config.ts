@@ -9,7 +9,11 @@ const npmFontProvider = fontProviders.npm({ remote: false });
 
 export default defineConfig({
   site: 'https://maxie.dev/',
-  integrations: [icon({ iconDir: 'src/assets/icons' }), sitemap(), playformCompress({ CSS: false })],
+  integrations: [
+    icon({ iconDir: 'src/assets/icons' }),
+    sitemap({ filter: page => !new URL(page).pathname.startsWith('/projects/tag/') }),
+    playformCompress({ CSS: false }),
+  ],
   output: 'static',
   trailingSlash: 'always',
   compressHTML: true,

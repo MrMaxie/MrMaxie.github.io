@@ -22,6 +22,10 @@ test('keeps critical CSS consistent and bounds all inline styles per page', () =
     assert.doesNotMatch(html, /<link\b[^>]*\brel=(?:"stylesheet"|'stylesheet'|stylesheet)/);
     const styles = [...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/g)].map(match => match[1]);
     assert.doesNotMatch(styles.join('\n'), /\b(?:NaN|Infinity)(?:ms|s)\b/, 'built animation timings must remain valid');
+    if (/<meta\b[^>]*\bhttp-equiv=(?:"refresh"|'refresh'|refresh)/.test(html)) {
+      assert.equal(styles.length, 0, 'redirect pages must not load the portfolio stylesheet');
+      continue;
+    }
     const shared = styles.filter(style => style.includes('.site-container{'));
     assert.equal(shared.length, 1, 'each page must contain the common critical stylesheet once');
     projectStyles.add(shared[0]);

@@ -11,6 +11,8 @@ export function siteStructuredData(site: string, canonical: string, crumbs: Crum
         '@id': person,
         name: 'Maciej Mieńko',
         alternateName: ['Maxie', 'MrMaxie'],
+        description:
+          'Software developer focused on developer tools, local infrastructure, and technically unusual problems.',
         url: profile,
         sameAs: ['https://github.com/MrMaxie', 'https://www.linkedin.com/in/maciej-mie%C5%84ko-b0200b190/'],
       },

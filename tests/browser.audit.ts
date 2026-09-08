@@ -21,7 +21,9 @@ test('production accessibility, readability and discoverability audit', async t 
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   const titles = new Map<string, string>();
-  const routes = await builtRoutes();
+  const built = await builtRoutes();
+  const redirectRoutes = built.filter(route => route.startsWith('/projects/tag/'));
+  const routes = built.filter(route => !redirectRoutes.includes(route));
   assert.ok(routes.length > 0, 'Build must contain public pages');
   for (const route of routes) {
     await t.test(`HTML without JavaScript: ${route}`, async () => {
@@ -94,6 +96,29 @@ test('production accessibility, readability and discoverability audit', async t 
       }
     });
   }
+  await t.test('legacy project tag pages redirect to canonical topic pages', async () => {
+    assert.ok(redirectRoutes.length > 0);
+    for (const route of redirectRoutes) {
+      const destination = route.replace('/projects/tag/', '/tags/');
+      const escapedDestination = destination.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      assert.ok(routes.includes(destination), `${route}: redirect target must be a generated canonical route`);
+      const response = await page.request.get(`${baseURL}${route}`);
+      assert.equal(response.status(), 200);
+      const html = await response.text();
+      const refresh = html.match(/<meta\b[^>]*\bhttp-equiv=(?:"refresh"|'refresh'|refresh)[^>]*>/)?.[0] ?? '';
+      assert.match(refresh, new RegExp(`\\bcontent="0;url=https://maxie\\.dev${escapedDestination}"`));
+      const canonical = html.match(/<link\b[^>]*\brel=(?:"canonical"|'canonical'|canonical)[^>]*>/)?.[0] ?? '';
+      assert.match(
+        canonical,
+        new RegExp(
+          `\\bhref=(?:"https://maxie\\.dev${escapedDestination}"|https://maxie\\.dev${escapedDestination})(?:\\s|>)`,
+        ),
+      );
+      assert.match(html, new RegExp(`<a\\b[^>]*\\bhref=(?:"${escapedDestination}"|${escapedDestination})(?:\\s|>)`));
+      await page.goto(`${baseURL}${route}`, { waitUntil: 'commit' });
+      await page.waitForURL(url => url.pathname === destination);
+    }
+  });
   await t.test('robots and sitemap expose the production routes', async () => {
     const banner = await page.request.get(`${baseURL}/og-banner.png`);
     assert.equal(banner.status(), 200);
@@ -115,6 +140,7 @@ test('production accessibility, readability and discoverability audit', async t 
       entries += await sitemap.text();
     }
     for (const route of routes) assert.ok(entries.includes(`<loc>https://maxie.dev${route}</loc>`), route);
+    for (const route of redirectRoutes) assert.ok(!entries.includes(`<loc>https://maxie.dev${route}</loc>`), route);
     assert.ok(!entries.includes('/404'), 'Error pages must not be advertised in the sitemap');
   });
   const missingRoute = '/audit-missing-page/';

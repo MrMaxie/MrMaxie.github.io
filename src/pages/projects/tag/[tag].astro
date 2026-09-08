@@ -1,9 +1,6 @@
 ---
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
-import ProjectCard from '~/components/projects/ProjectCard.astro';
-import CatalogHeader from '~/components/ui/CatalogHeader.astro';
-import BaseLayout from '~/layouts/Base.astro';
 import { getProjects } from '~/lib/projects';
 import Routes from '~/lib/routes';
 import { tagToSlug } from '~/lib/tags';
@@ -20,34 +17,31 @@ export const getStaticPaths = (async () => {
 
   return Array.from(tagNames, ([tag, tagName]) => ({
     params: { tag },
-    props: {
-      tagName,
-      projects: projects.filter(project => project.tags.some(value => tagToSlug(value) === tag)),
-    },
+    props: { tagName },
   }));
 }) satisfies GetStaticPaths;
 
 interface Props extends InferGetStaticPropsType<typeof getStaticPaths> {}
-const { tagName, projects } = Astro.props;
+const { tagName } = Astro.props;
+const tag = Astro.params.tag;
+if (!tag) throw new Error('Missing project tag route parameter');
+const destination = Routes.topic(tag);
+const canonicalUrl = new URL(destination, Astro.site).href;
 ---
 
-<BaseLayout
-  smallerHeader
-  title={[`${tagName} projects`, 'Projects']}
-  description={`Projects using or exploring ${tagName}, with their context, responsibility, and outcome.`}
-  crumbs={[{ label: 'Projects', href: Routes.projects() }, { label: tagName }]}
->
-  <div class="project-tag-page">
-    <CatalogHeader
-      eyebrow="Projects"
-      title={tagName}
-      description={`Projects using or exploring ${tagName}.`}
-      count={`${projects.length} ${projects.length === 1 ? 'project' : 'projects'}`}
-      actions={[{ href: Routes.topics(), label: 'Browse all topics' }]}
-    />
-
-    <section class="mt-4 grid grid-cols-2 gap-4 max-content:grid-cols-1" aria-label={`${tagName} projects`}>
-      {projects.map(project => <ProjectCard project={project} />)}
-    </section>
-  </div>
-</BaseLayout>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="refresh" content={`0;url=${canonicalUrl}`}>
+    <link rel="canonical" href={canonicalUrl}>
+    <title>{`Redirecting ${tagName} projects | Maxie.dev`}</title>
+  </head>
+  <body>
+    <main>
+      <h1>This page has moved</h1>
+      <p>Continue to <a href={destination}>{tagName} projects and mods</a>.</p>
+    </main>
+  </body>
+</html>

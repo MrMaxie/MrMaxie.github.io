@@ -43,7 +43,7 @@ if (canonicalUrl) {
   canonicalUrl = canonicalUrl.replace(/\/+/g, '/').replace(':/', '://');
 }
 const breadcrumbs = crumbs ? [{ label: 'Home', href: '/' }, ...crumbs] : [];
-const pageTitle = [...title, 'Maciej Mieńko'].join(' | ');
+const pageTitle = [...title, 'Maciej Mieńko "Maxie"'].join(' | ');
 const pageDescription = description ?? 'Software projects and game mods by Maciej Mieńko.';
 const socialImage = new URL('/og-banner.png', Astro.site).href;
 const socialImageAlt = 'Maciej Mieńko, software developer, with his portrait, maxie.dev and github.com/MrMaxie.';
