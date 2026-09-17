@@ -46,6 +46,47 @@ test('stores a typed catalog with neighboring Markdown descriptions', () => {
   }
 });
 
+test('keeps public project versions and destinations aligned with their published sources', () => {
+  const entries = new Map(catalog('projects').map(entry => [entry.slug, entry]));
+  const expected = {
+    arcantry: {
+      version: '1.0.0',
+      links: ['https://arcantry.dev/', 'https://github.com/MrMaxie/arcantry'],
+    },
+    cadder: {
+      version: '0.8.0',
+      links: ['https://maxie.dev/cadder/', 'https://github.com/MrMaxie/cadder'],
+    },
+    dovik: {
+      version: '1.1.0',
+      links: ['https://maxie.dev/dovik/', 'https://www.npmjs.com/package/dovik', 'https://github.com/MrMaxie/dovik'],
+    },
+    ttyglass: {
+      version: '1.1.0',
+      links: [
+        'https://github.com/MrMaxie/ttyglass#readme',
+        'https://www.npmjs.com/package/ttyglass',
+        'https://github.com/MrMaxie/ttyglass',
+      ],
+    },
+    'office-3ds': {
+      version: '1.0.0',
+      links: ['https://github.com/MrMaxie/office-3ds'],
+    },
+  };
+
+  for (const [slug, expectation] of Object.entries(expected)) {
+    const entry = entries.get(slug);
+    assert.ok(entry, `Missing project: ${slug}`);
+    assert.equal(entry.fields.version, expectation.version);
+    for (const link of expectation.links) assert.ok(entry.html.includes(link), `${slug}: missing ${link}`);
+  }
+
+  const dovik = entries.get('dovik');
+  assert.equal(dovik?.fields.license, 'Apache-2.0');
+  assert.doesNotMatch(dovik?.source ?? '', /Access\.Private/);
+});
+
 test('uses the shared header and description with real rendered metadata', () => {
   for (const group of ['projects', 'mods']) {
     const detail = readSource(`src/pages/${group}/[slug].astro`);

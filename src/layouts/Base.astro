@@ -4,6 +4,7 @@ import { ClientRouter, fade } from 'astro:transitions';
 import type { ComponentProps } from 'astro/types';
 
 import '~/styles/global.css';
+import portrait from '~/assets/portrait.png';
 
 import Breadcrumbs from '~/components/site/Breadcrumbs.astro';
 import ContactPanel from '~/components/site/ContactPanel.astro';
@@ -46,6 +47,7 @@ const breadcrumbs = crumbs ? [{ label: 'Home', href: '/' }, ...crumbs] : [];
 const pageTitle = [...title, 'Maciej Mieńko "Maxie"'].join(' | ');
 const pageDescription = description ?? 'Software projects and game mods by Maciej Mieńko.';
 const socialImage = new URL('/og-banner.png', Astro.site).href;
+const personImage = new URL(portrait.src, Astro.site).href;
 const socialImageAlt = 'Maciej Mieńko, software developer, with his portrait, maxie.dev and github.com/MrMaxie.';
 ---
 
@@ -81,7 +83,7 @@ const socialImageAlt = 'Maciej Mieńko, software developer, with his portrait, m
       <meta name="twitter:image" content={socialImage} />
       <meta name="twitter:image:alt" content={socialImageAlt} />
     </>}
-    {canonicalUrl && <script type="application/ld+json" set:html={serializeStructuredData(siteStructuredData(String(Astro.site), canonicalUrl, breadcrumbs))} />}
+    {canonicalUrl && <script type="application/ld+json" set:html={serializeStructuredData(siteStructuredData(String(Astro.site), canonicalUrl, personImage, breadcrumbs))} />}
     <Font cssVariable="--font-outfit" preload />
     <Font cssVariable="--font-karla" preload />
     <Font cssVariable="--font-fira-code" preload={smallerHeader ? [{ subset: 'latin' }] : false} />

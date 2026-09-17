@@ -67,6 +67,7 @@ test('presents office-3ds as a dashboard without anonymization or neutral-demo f
 
 test('shows the corrected technologies on project cards', () => {
   const expected = {
+    ttyglass: ['Nim', 'TypeScript'],
     'factory-control-platform': ['TypeScript', 'C/C++', 'C#'],
     'vision-guided-drone-system': ['C/C++', 'Embedded C', 'Python'],
     'work-management-platform': ['TypeScript', 'C#'],
@@ -108,7 +109,7 @@ test('omits dates from project cards and uses the short Docs label', () => {
 });
 
 test('labels private projects on cards and detail pages', () => {
-  for (const slug of ['mivi', 'dovik', 'blocksy']) {
+  for (const slug of ['mivi', 'blocksy']) {
     assert.match(source(`${slug}.ts`), /access: Access.Private/);
     assert.match(html(`projects/${slug}`), /Private/);
     assert.doesNotMatch(html(`projects/${slug}`), /Not publicly available yet\./);
@@ -134,7 +135,7 @@ test('keeps featured cards consistent with private badges and no status footers'
     const card = home.match(new RegExp(`<article\\b[^>]*\\bid="?${slug}"?[\\s>][\\s\\S]*?</article>`))?.[0];
     assert.ok(card, `Missing featured card: ${slug}`);
     assert.doesNotMatch(card, /<time\b|project-currentness|Not publicly available yet\./);
-    if (slug === 'mivi' || slug === 'dovik') {
+    if (slug === 'mivi') {
       assert.match(card, /Private/);
     }
   }

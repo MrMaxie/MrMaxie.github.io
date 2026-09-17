@@ -82,6 +82,15 @@ const Go = createTag({
   kind: TagKind.Technology,
 });
 
+const Nim = createTag({
+  name: 'Nim',
+  color: '#e6c45d',
+  icon: 'material-icon-theme:nim',
+  description: 'Native developer tools and terminal software written in Nim.',
+  id: 'nim',
+  kind: TagKind.Technology,
+});
+
 const EmbeddedC = createTag({
   name: 'Embedded C',
   color: '#69a9e8',
@@ -110,6 +119,7 @@ export const Tags = {
   Lua,
   DevOps,
   Go,
+  Nim,
   EmbeddedC,
   Python,
 } as const;

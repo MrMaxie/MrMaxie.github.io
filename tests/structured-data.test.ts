@@ -10,8 +10,9 @@ test('JSON-LD preserves text without allowing script termination', () => {
 });
 
 test('public identity links the name, aliases, profiles and website to one person', () => {
+  const image = 'https://maxie.dev/static/portrait.example.png';
   for (const route of ['/', '/about/', '/projects/']) {
-    const graph = siteStructuredData('https://maxie.dev/', `https://maxie.dev${route}`)['@graph'];
+    const graph = siteStructuredData('https://maxie.dev/', `https://maxie.dev${route}`, image)['@graph'];
     const person = graph.find(item => item['@type'] === 'Person');
     const website = graph.find(item => item['@type'] === 'WebSite');
     assert.equal(person?.name, 'Maciej Mieńko');
@@ -21,6 +22,7 @@ test('public identity links the name, aliases, profiles and website to one perso
       person?.description,
       'Software developer focused on developer tools, local infrastructure, and technically unusual problems.',
     );
+    assert.equal(person?.image, image);
     assert.deepEqual(person?.sameAs, [
       'https://github.com/MrMaxie',
       'https://www.linkedin.com/in/maciej-mie%C5%84ko-b0200b190/',
@@ -39,11 +41,12 @@ test('public identity links the name, aliases, profiles and website to one perso
 });
 
 test('breadcrumbs resolve public URLs and preserve visible order', () => {
-  const graph = siteStructuredData('https://maxie.dev/', 'https://maxie.dev/projects/example/', [
-    { label: 'Home', href: '/' },
-    { label: 'Projects', href: '/projects/' },
-    { label: 'Example' },
-  ])['@graph'];
+  const graph = siteStructuredData(
+    'https://maxie.dev/',
+    'https://maxie.dev/projects/example/',
+    '/static/portrait.example.png',
+    [{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects/' }, { label: 'Example' }],
+  )['@graph'];
   const breadcrumbs = graph.find(item => item['@type'] === 'BreadcrumbList');
   assert.deepEqual(
     breadcrumbs?.itemListElement?.map(item => [item.position, item.name, item.item]),

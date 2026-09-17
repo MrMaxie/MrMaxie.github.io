@@ -3,6 +3,7 @@ export const projectOrder = [
   'cadder',
   'mivi',
   'dovik',
+  'ttyglass',
   'office-3ds',
   'free-tray-games',
   'maxiedev-events',

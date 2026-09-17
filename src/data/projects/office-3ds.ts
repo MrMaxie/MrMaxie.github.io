@@ -4,6 +4,7 @@ import { Content as description } from './office-3ds.md';
 
 export default createProject({
   name: 'office-3ds',
+  version: '1.0.0',
   summary:
     'An office dashboard for Nintendo 3DS, with a native interface and customizable appearance, content and API integration.',
   color: '#79c9ff',

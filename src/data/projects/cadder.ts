@@ -11,7 +11,10 @@ export default createProject({
     "Helps developers run several local web projects behind stable HTTPS addresses without changing each project's normal start command.",
   color: '#72c9b7',
   tags: [Tags.Rust, Tags.DevOps],
-  links: [{ label: 'Source code', href: 'https://github.com/MrMaxie/cadder', kind: LinkKind.Source }],
+  links: [
+    { label: 'Docs', href: 'https://maxie.dev/cadder/', kind: LinkKind.Website },
+    { label: 'Source code', href: 'https://github.com/MrMaxie/cadder', kind: LinkKind.Source },
+  ],
   logo,
   description,
 });

@@ -12,7 +12,7 @@ export default createProject({
   color: '#b39aff',
   tags: [Tags.Rust, Tags.TypeScript],
   links: [
-    { label: 'Docs', href: 'https://maxie.dev/arcantry/', kind: LinkKind.Website },
+    { label: 'Docs', href: 'https://arcantry.dev/', kind: LinkKind.Website },
     { label: 'Source code', href: 'https://github.com/MrMaxie/arcantry', kind: LinkKind.Source },
   ],
   logo,

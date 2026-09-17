@@ -10,6 +10,6 @@ export default createProject({
   color: '#E69DB8',
   icon: 'lucide:split',
   tags: [Tags.TypeScript],
-  links: [{ label: 'npm', href: 'https://www.npmjs.com/package/@maxiedev/events', kind: LinkKind.Website }],
+  links: [{ label: 'npm', href: 'https://www.npmjs.com/package/@maxiedev/events', kind: LinkKind.Npm }],
   description,
 });

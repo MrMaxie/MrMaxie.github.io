@@ -11,6 +11,7 @@ interface Props {
 const { links, name, compact = false } = Astro.props;
 const icons = {
   [LinkKind.Website]: 'tabler:world',
+  [LinkKind.Npm]: 'tabler:brand-npm',
   [LinkKind.Source]: 'tabler:brand-github',
   [LinkKind.Issues]: 'tabler:message-report',
 };

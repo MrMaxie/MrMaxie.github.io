@@ -18,6 +18,7 @@ test('keeps project destinations visible', () => {
   const actions = readSource('../src/components/ui/ResourceLinks.astro');
 
   assert.doesNotMatch(actions, /\.project-actions a span\s*{/);
+  assert.match(actions, /\[LinkKind\.Npm\]: 'tabler:brand-npm'/);
 });
 
 test('keeps shared cards keyboard reachable with separately labeled destinations', () => {

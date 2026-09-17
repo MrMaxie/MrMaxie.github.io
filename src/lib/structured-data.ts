@@ -1,6 +1,6 @@
 type Crumb = { label: string; href?: string };
 
-export function siteStructuredData(site: string, canonical: string, crumbs: Crumb[] = []) {
+export function siteStructuredData(site: string, canonical: string, personImage: string, crumbs: Crumb[] = []) {
   const person = `${site}#person`;
   const profile = new URL('/about/', site).href;
   return {
@@ -13,6 +13,7 @@ export function siteStructuredData(site: string, canonical: string, crumbs: Crum
         alternateName: ['Maxie', 'MrMaxie'],
         description:
           'Software developer focused on developer tools, local infrastructure, and technically unusual problems.',
+        image: new URL(personImage, site).href,
         url: profile,
         sameAs: ['https://github.com/MrMaxie', 'https://www.linkedin.com/in/maciej-mie%C5%84ko-b0200b190/'],
       },
