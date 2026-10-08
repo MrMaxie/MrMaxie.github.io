@@ -1,15 +1,15 @@
-Money = Luck? adds an item that ties <mark>Luck to your coin count</mark>. Picking up or spending a single coin can turn a bonus into a penalty, so the amount you carry matters as much as the items you hold.
+Money = Luck? turns <mark>your coin balance into Luck</mark> through a repeating seven-coin cycle. The effect rises from negative Luck to a positive peak at each positive multiple of seven, so picking up or spending coins can change your run. Isaac's glasses show the current effect: red for negative, gray for zero, and green for positive Luck.
 
-## Every coin changes the balance
+## A seven-coin fortune cycle
 
-With an **even coin count**, the item adds **0.2 Luck per coin**. With an **odd coin count**, it subtracts the same amount. For example, 10 coins give +2 Luck, while 11 coins give -2.2 Luck.
+Ordinary cycles can reach **+2.3 Luck**. Some balances have special results: **13 coins** give **-1.3 Luck**, **21** give **+1.5**, **77** give **+3**, and **99** give **-1.5**. Deep Pockets extends the cycle to 999 coins, with additional special balances.
 
-In this state, holding **"A Dollar"** adds 1 Luck, and **"3 Dollar Bill"** adds another 1 Luck.
+## Money Clip and Rose-Tinted Glasses
 
-## When the rules change
+**Money Clip** can hold a positive multiple of seven by leaving later coin pickups on the floor until you spend. A golden Money Clip or Mom's Box stops larger pickups at the next reachable lucky balance and returns the excess as ordinary change.
 
-Holding **"Money = Power"** reduces Luck by **5**, while carrying **no coins** reduces it by **2**. These conditions take precedence over the usual coin-based modifiers.
+**Rose-Tinted Glasses**, found in Shops, reverse how visible Luck affects the chance of receiving a bonus penny after a paid Shop purchase. They do not change visible Luck itself.
 
-## A costume that reflects your Luck
+## More ways to use your Luck
 
-The costume turns **green** with an even coin count and **gray** with an odd count. It turns **red** when you hold "Money = Power" or have no coins, making the current state visible while you play.
+Paid Shop purchases can leave an ordinary penny on the floor. Lucky Penny can preserve a lucky peak you crossed, Lucky Foot limits negative Luck from the item, and Keeper's Sack can grant an extra stat increase after a qualifying collectible purchase. The mod also supports External Item Descriptions and an in-game information display.

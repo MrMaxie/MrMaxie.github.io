@@ -82,15 +82,16 @@ test('preserves the approved mod media and provider destinations', () => {
   const entries = catalog('mods');
   assert.deepEqual(entries.map(entry => entry.slug).sort(), Object.keys(links).sort());
   const screenshots: Record<string, string[]> = {
-    'daedalian-keys': ['01', '02'],
-    'imelda-flight-challenges': ['03', '02', '01'],
+    'boss-scaler': ['01.png', '02.png'],
+    'economy-scaler': ['01.png', '02.png'],
+    'money-is-luck': ['01-money-red.png', '03-money-green.png', '08-money-clip.png', '09-item-family.png'],
+    'daedalian-keys': ['01.jpg', '02.jpg'],
+    'imelda-flight-challenges': ['03.jpg', '02.jpg', '01.jpg'],
   };
   for (const entry of entries) {
     assert.ok(entry.html.includes(links[entry.slug as keyof typeof links]));
     const media = [...entry.source.matchAll(/from ['"](.*?assets\/mods\/.*?)['"]/g)].map(match => match[1]);
-    const expectedScreenshots = (screenshots[entry.slug] ?? []).map(
-      number => `../../assets/mods/${entry.slug}/${number}.jpg`,
-    );
+    const expectedScreenshots = (screenshots[entry.slug] ?? []).map(file => `../../assets/mods/${entry.slug}/${file}`);
     assert.deepEqual(media.sort(), [`../../assets/mods/${entry.slug}.png`, ...expectedScreenshots].sort());
     const imports = new Map(
       [...entry.source.matchAll(/import (\w+) from ['"]([^'"]+)['"]/g)].map(match => [match[1], match[2]]),
@@ -108,7 +109,7 @@ test('preserves the approved mod media and provider destinations', () => {
   );
   assert.match(
     pageText(entries.find(entry => entry.slug === 'money-is-luck')?.html ?? ''),
-    /even coin count, the item adds 0\.2 Luck per coin/,
+    /a repeating seven-coin cycle/,
   );
 });
 
@@ -121,14 +122,12 @@ test('lists every mod in its game section without game subpages or truncation', 
   assert.doesNotMatch(readSource('src/pages/mods.astro'), /\.slice\(/);
 });
 
-test('renders optional screenshots between the header and description with accessible controls', () => {
+test('renders published screenshots between the header and description with accessible controls', () => {
   for (const entry of catalog('mods')) {
     const carousel = entry.html.indexOf('aria-roledescription=carousel');
-    if (['daedalian-keys', 'imelda-flight-challenges'].includes(entry.slug)) {
-      assert.ok(carousel >= 0 && carousel < entry.html.indexOf('data-project-description'));
-      for (const text of ['Show previous image', 'Show next image', 'aria-live=polite'])
-        assert.ok(entry.html.includes(text));
-    } else assert.equal(carousel, -1);
+    assert.ok(carousel >= 0 && carousel < entry.html.indexOf('data-project-description'));
+    for (const text of ['Show previous image', 'Show next image', 'aria-live=polite'])
+      assert.ok(entry.html.includes(text));
     assert.doesNotMatch(entry.html, /<dl\b|mod-detail__backdrop|mod-detail__foreground/);
   }
   const script = readSource('src/scripts/mod-slideshow.ts');

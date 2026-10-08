@@ -54,7 +54,7 @@ test('keeps public project versions and destinations aligned with their publishe
       links: ['https://arcantry.dev/', 'https://github.com/MrMaxie/arcantry'],
     },
     cadder: {
-      version: '0.8.0',
+      version: '1.0.5',
       links: ['https://maxie.dev/cadder/', 'https://github.com/MrMaxie/cadder'],
     },
     dovik: {

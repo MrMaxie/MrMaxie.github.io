@@ -5,7 +5,7 @@ import { Content as description } from './cadder.md';
 
 export default createProject({
   name: 'Cadder',
-  version: '0.8.0',
+  version: '1.0.5',
   license: 'Apache-2.0',
   summary:
     "Helps developers run several local web projects behind stable HTTPS addresses without changing each project's normal start command.",
